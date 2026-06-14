@@ -1,0 +1,236 @@
+@import 'tailwindcss';
+
+/* ----------------------------------------------------------------------------
+   PlacePos — sistema de diseño
+   Tema oscuro premium, acento violeta→índigo→cian. Tipografía Sora (display)
+   + Inter (texto). Tokens expuestos a Tailwind v4 vía @theme.
+---------------------------------------------------------------------------- */
+@theme {
+	--font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+	--font-display: 'Sora', 'Inter', system-ui, sans-serif;
+
+	/* Lienzo */
+	--color-ink: #07070b;
+	--color-ink-soft: #0c0c14;
+	--color-surface: #11111c;
+	--color-surface-2: #161624;
+	--color-line: #23233a;
+
+	/* Texto */
+	--color-fg: #f4f4fb;
+	--color-fg-muted: #a6a6c2;
+	--color-fg-faint: #6c6c8a;
+
+	/* Marca */
+	--color-brand: #7c5cff;
+	--color-brand-2: #5b8cff;
+	--color-brand-3: #22d3ee;
+	--color-iris: #8b5cf6;
+	--color-mint: #34e4b0;
+	--color-amber: #ffb454;
+
+	--shadow-glow: 0 0 80px -20px rgba(124, 92, 255, 0.55);
+
+	--ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+	--ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ----------------------------------------------------------------------------
+   Base
+---------------------------------------------------------------------------- */
+html {
+	scroll-behavior: smooth;
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	background-color: var(--color-ink);
+	color: var(--color-fg);
+	font-family: var(--font-sans);
+	font-feature-settings: 'ss01', 'cv01', 'cv11';
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+	overflow-x: hidden;
+}
+
+::selection {
+	background: rgba(124, 92, 255, 0.35);
+	color: #fff;
+}
+
+h1,
+h2,
+h3,
+h4 {
+	font-family: var(--font-display);
+	letter-spacing: -0.02em;
+	line-height: 1.05;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+	width: 10px;
+}
+::-webkit-scrollbar-track {
+	background: var(--color-ink);
+}
+::-webkit-scrollbar-thumb {
+	background: #2a2a44;
+	border-radius: 9999px;
+	border: 2px solid var(--color-ink);
+}
+::-webkit-scrollbar-thumb:hover {
+	background: #3a3a5c;
+}
+
+/* ----------------------------------------------------------------------------
+   Utilidades de marca
+---------------------------------------------------------------------------- */
+@utility text-gradient {
+	background: linear-gradient(100deg, #fff 0%, #c9bdff 40%, #7c5cff 75%, #22d3ee 100%);
+	background-clip: text;
+	-webkit-background-clip: text;
+	color: transparent;
+}
+
+@utility text-gradient-soft {
+	background: linear-gradient(100deg, #f4f4fb 10%, #a6a6c2 100%);
+	background-clip: text;
+	-webkit-background-clip: text;
+	color: transparent;
+}
+
+@utility glass {
+	background: rgba(17, 17, 28, 0.6);
+	backdrop-filter: blur(16px) saturate(160%);
+	-webkit-backdrop-filter: blur(16px) saturate(160%);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@utility card-hairline {
+	border: 1px solid var(--color-line);
+	background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0));
+}
+
+/* Borde con gradiente (mask) para tarjetas premium */
+@utility ring-gradient {
+	position: relative;
+}
+
+/* Grid de fondo */
+.bg-grid {
+	background-image:
+		linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+		linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+	background-size: 56px 56px;
+	mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+}
+
+.bg-dots {
+	background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+	background-size: 22px 22px;
+}
+
+/* Orbe de gradiente para parallax */
+.orb {
+	position: absolute;
+	border-radius: 9999px;
+	filter: blur(70px);
+	opacity: 0.55;
+	pointer-events: none;
+	will-change: transform;
+}
+
+/* ----------------------------------------------------------------------------
+   Animaciones (solo transform / opacity)
+---------------------------------------------------------------------------- */
+@keyframes float-y {
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-14px);
+	}
+}
+
+@keyframes pulse-ring {
+	0% {
+		transform: scale(0.9);
+		opacity: 0.7;
+	}
+	100% {
+		transform: scale(1.8);
+		opacity: 0;
+	}
+}
+
+@keyframes shimmer {
+	0% {
+		background-position: -200% 0;
+	}
+	100% {
+		background-position: 200% 0;
+	}
+}
+
+@keyframes marquee {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(-50%);
+	}
+}
+
+@keyframes gradient-pan {
+	0%,
+	100% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+}
+
+.animate-float {
+	animation: float-y 7s var(--ease-out-quint) infinite;
+}
+.animate-marquee {
+	animation: marquee 32s linear infinite;
+}
+.animate-gradient {
+	background-size: 200% 200%;
+	animation: gradient-pan 8s ease infinite;
+}
+
+/* Scroll reveal: el `use:reveal` añade .is-in */
+.reveal {
+	opacity: 0;
+	transform: translateY(28px);
+	transition:
+		opacity 0.7s var(--ease-out-quint),
+		transform 0.7s var(--ease-out-quint);
+	will-change: transform, opacity;
+}
+.reveal.is-in {
+	opacity: 1;
+	transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+	.reveal {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+	.animate-float,
+	.animate-marquee,
+	.animate-gradient,
+	.orb {
+		animation: none !important;
+	}
+}
