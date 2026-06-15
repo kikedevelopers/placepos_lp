@@ -9,7 +9,12 @@ const config = {
 			fallback: null,
 			precompress: false,
 			strict: true
-		})
+		}),
+		paths: {
+			// En local (pnpm dev) se sirve en la raíz; en GitHub Pages se sirve
+			// bajo el nombre del repo: kikedevelopers.github.io/placepos_lp
+			base: process.env.ENVIRONMENT === 'development' ? '' : '/placepos_lp'
+		}
 	}
 };
 

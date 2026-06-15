@@ -1,25 +1,10 @@
 <script lang="ts">
-	import Icon from './Icon.svelte';
 	import { reveal } from '$lib/actions/reveal';
 	import { parallax } from '$lib/actions/parallax';
-	import { SITE } from '$lib/data/site';
 
-	const platforms = [
-		{
-			key: 'windows',
-			name: 'Windows',
-			detail: 'Windows 10 y 11 · 64-bit',
-			file: 'Instalador .exe',
-			href: SITE.downloads.windows
-		},
-		{
-			key: 'mac',
-			name: 'macOS',
-			detail: 'Apple Silicon e Intel',
-			file: 'Instalador .dmg',
-			href: SITE.downloads.mac
-		}
-	];
+	// Número de contacto (formato internacional para WhatsApp / tel)
+	const contactWhatsapp = '573117323107';
+	const contactDisplay = '+57 311 732 3107';
 </script>
 
 <section id="cta" class="relative scroll-mt-24 overflow-hidden py-20 sm:py-28">
@@ -47,63 +32,45 @@
 					<span class="text-gradient animate-gradient">hoy mismo</span>
 				</h2>
 				<p class="mx-auto mt-5 max-w-lg text-fg-muted">
-					Descarga PlacePos en el computador de tu negocio y empieza a vender en minutos. Elige tu
-					sistema operativo:
+					Escríbenos o llámanos y te ayudamos a poner tu negocio a vender más. Estamos listos para
+					atenderte:
 				</p>
 
-				<!-- Tarjetas de descarga -->
-				<div class="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
-					{#each platforms as p, i (p.key)}
-						<a
-							href={p.href}
-							class="reveal group relative flex flex-col items-center overflow-hidden rounded-2xl border border-white/[0.1] bg-white/[0.03] p-7 text-center transition-all duration-300 hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06]"
-							use:reveal={{ delay: i * 110 }}
-							aria-label="Descargar PlacePos para {p.name}"
-						>
-							<div
-								class="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
-								style="background:radial-gradient(circle,rgba(124,92,255,0.45),transparent 70%)"
-							></div>
-
-							<span
-								class="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.05] text-fg transition-transform duration-300 group-hover:scale-105"
-							>
-								{#if p.key === 'windows'}
-									<svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-										<path
-											d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"
-										/>
-									</svg>
-								{:else}
-									<svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-										<path
-											d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701z"
-										/>
-									</svg>
-								{/if}
-							</span>
-
-							<h3 class="mt-4 font-display text-lg font-bold text-fg">{p.name}</h3>
-							<p class="mt-1 text-xs text-fg-faint">{p.detail}</p>
-
-							<span
-								class="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-white transition-transform duration-200 group-active:scale-[0.98]"
-								style="background:linear-gradient(135deg,#8b5cf6,#6366f1 55%,#22d3ee)"
-							>
-								<Icon name="download" size={16} />
-								Descargar
-							</span>
-							<span class="mt-2.5 text-[11px] text-fg-faint">{p.file}</span>
-						</a>
-					{/each}
-				</div>
-
-				<p class="mt-7 text-xs text-fg-faint">
-					Versión {SITE.version} · Gratis para empezar · ¿Dudas?
-					<a href="mailto:{SITE.email}" class="text-fg-muted underline-offset-2 hover:text-fg hover:underline"
-						>Escríbenos</a
+				<!-- Contacto -->
+				<div class="reveal mx-auto mt-10 max-w-md" use:reveal={{ delay: 110 }}>
+					<a
+						href="https://wa.me/{contactWhatsapp}"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="group relative flex flex-col items-center overflow-hidden rounded-2xl border border-white/[0.1] bg-white/[0.03] p-8 text-center transition-all duration-300 hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06]"
+						aria-label="Contáctanos por WhatsApp"
 					>
-				</p>
+						<div
+							class="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
+							style="background:radial-gradient(circle,rgba(124,92,255,0.45),transparent 70%)"
+						></div>
+
+						<span
+							class="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.05] text-fg transition-transform duration-300 group-hover:scale-105"
+						>
+							<svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+								<path
+									d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 0 1 8.413 3.488 11.824 11.824 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 0 0 1.51 5.26l-.999 3.648 3.978-1.607zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"
+								/>
+							</svg>
+						</span>
+
+						<h3 class="mt-4 font-display text-lg font-bold text-fg">Contáctanos</h3>
+						<p class="mt-1 text-xs text-fg-faint">WhatsApp · Llamada</p>
+
+						<span
+							class="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-base font-semibold text-white transition-transform duration-200 group-active:scale-[0.98]"
+							style="background:linear-gradient(135deg,#8b5cf6,#6366f1 55%,#22d3ee)"
+						>
+							{contactDisplay}
+						</span>
+					</a>
+				</div>
 			</div>
 		</div>
 	</div>

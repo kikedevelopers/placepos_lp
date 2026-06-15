@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Logo from './Logo.svelte';
 	import Icon from './Icon.svelte';
-	import { SITE } from '$lib/data/site';
 
 	let scrolled = $state(false);
 	let open = $state(false);
@@ -53,15 +52,9 @@
 			<div class="hidden items-center gap-2 md:flex">
 				<a
 					href="#cta"
-					class="rounded-lg px-3.5 py-2 text-sm font-medium text-fg-muted transition-colors hover:text-fg"
-				>
-					Iniciar sesión
-				</a>
-				<a
-					href="#cta"
 					class="group relative inline-flex items-center gap-1.5 overflow-hidden rounded-lg bg-fg px-4 py-2 text-sm font-semibold text-ink transition-transform duration-200 active:scale-[0.97]"
 				>
-					{SITE.ctaPrimary}
+					Comienza YA!
 					<Icon name="arrow" size={15} class="transition-transform duration-200 group-hover:translate-x-0.5" />
 				</a>
 			</div>
@@ -98,7 +91,7 @@
 					onclick={() => (open = false)}
 					class="mt-2 flex items-center justify-center gap-1.5 rounded-lg bg-fg px-4 py-3 text-sm font-semibold text-ink"
 				>
-					{SITE.ctaPrimary}
+					Comienza YA!
 					<Icon name="arrow" size={15} />
 				</a>
 			</div>
