@@ -25,7 +25,7 @@
 			title: 'Contacto',
 			links: [
 				{ label: SITE.email, href: `mailto:${SITE.email}` },
-				{ label: 'Solicitar demo', href: '#cta' }
+				{ label: 'Contáctanos', href: '#cta' }
 			]
 		}
 	];

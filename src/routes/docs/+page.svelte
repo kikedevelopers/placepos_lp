@@ -9,6 +9,10 @@
 	import { DOC_MODULES, DOC_GROUPS } from '$lib/data/docs';
 	import { SITE } from '$lib/data/site';
 
+	const pageTitle = `Documentación — ${SITE.name}`;
+	const pageUrl = `${SITE.domain}/docs`;
+	const pageDesc = `Cómo funciona ${SITE.name} por dentro: qué hace cada módulo, los conceptos que conviene entender y cómo se conectan entre sí.`;
+
 	let activeId = $state(DOC_MODULES[0].id);
 	let menuOpen = $state(false);
 
@@ -48,11 +52,23 @@
 </script>
 
 <svelte:head>
-	<title>Documentación — {SITE.name}</title>
-	<meta
-		name="description"
-		content="Cómo funciona {SITE.name} por dentro: qué hace cada módulo, los conceptos que conviene entender y cómo se conectan entre sí."
-	/>
+	<title>{pageTitle}</title>
+	<meta name="description" content={pageDesc} />
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href={pageUrl} />
+
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content={SITE.name} />
+	<meta property="og:title" content={pageTitle} />
+	<meta property="og:description" content={pageDesc} />
+	<meta property="og:url" content={pageUrl} />
+	<meta property="og:image" content="{SITE.domain}/logo.png" />
+	<meta property="og:locale" content="es_CO" />
+
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={pageTitle} />
+	<meta name="twitter:description" content={pageDesc} />
+	<meta name="twitter:image" content="{SITE.domain}/logo.png" />
 </svelte:head>
 
 <svelte:window

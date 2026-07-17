@@ -1,12 +1,14 @@
 export const SITE = {
 	name: 'PlacePos',
-	domain: 'https://placepos.com',
+	// Dominio REAL donde vive el sitio (custom domain de GitHub Pages). Es la
+	// base de canonical, Open Graph, JSON-LD y sitemap: si esto no coincide con
+	// la URL servida, Google recibe señales contradictorias y no indexa bien.
+	domain: 'https://placepos.kikedevs.com',
 	tagline: 'El ERP que pone tu negocio a vender más',
 	description:
 		'PlacePos es el ERP todo-en-uno para tu negocio: punto de venta, inventario, compras, gastos, tesorería, créditos y reportes financieros en una sola plataforma. Vende más, controla todo y decide con datos en tiempo real.',
 	email: 'hola@placepos.com',
 	ctaPrimary: 'Empieza gratis',
-	ctaSecondary: 'Ver una demo',
 	version: '1.0.0',
 	// Enlaces PERMANENTES (siempre apuntan a la última versión publicada por el
 	// release action de placepos; se sobrescriben en cada push a main).

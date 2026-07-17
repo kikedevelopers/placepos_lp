@@ -50,6 +50,17 @@
 		email: SITE.email
 	};
 
+	// Refuerza la asociación marca ↔ dominio: al buscar "PlacePos", Google sabe
+	// que este sitio ES PlacePos (incluye la variante sin mayúscula intercalada).
+	const ldWebsite = {
+		'@context': 'https://schema.org',
+		'@type': 'WebSite',
+		name: SITE.name,
+		alternateName: ['Placepos', 'Place Pos', 'Place POS'],
+		url,
+		inLanguage: 'es-CO'
+	};
+
 	const ldFaq = {
 		'@context': 'https://schema.org',
 		'@type': 'FAQPage',
@@ -87,6 +98,7 @@
 	<meta name="twitter:description" content={SITE.description} />
 	<meta name="twitter:image" content={ogImage} />
 
+	{@html `<script type="application/ld+json">${JSON.stringify(ldWebsite)}</` + `script>`}
 	{@html `<script type="application/ld+json">${JSON.stringify(ldSoftware)}</` + `script>`}
 	{@html `<script type="application/ld+json">${JSON.stringify(ldOrg)}</` + `script>`}
 	{@html `<script type="application/ld+json">${JSON.stringify(ldFaq)}</` + `script>`}

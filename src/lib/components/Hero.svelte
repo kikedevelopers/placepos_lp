@@ -75,13 +75,6 @@
 						class="relative z-10 transition-transform duration-200 group-hover:translate-x-0.5"
 					/>
 				</a>
-				<a
-					href="#how"
-					class="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/12 bg-white/[0.03] px-7 py-3.5 text-sm font-semibold text-fg transition-colors duration-200 hover:bg-white/[0.07] sm:w-auto"
-				>
-					<Icon name="phone" size={16} />
-					{SITE.ctaSecondary}
-				</a>
 			</div>
 
 			<p
