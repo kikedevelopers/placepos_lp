@@ -1,13 +1,17 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import Logo from './Logo.svelte';
 	import Icon from './Icon.svelte';
 
 	let scrolled = $state(false);
 	let open = $state(false);
 
+	// `/docs` es una página aparte y va con `base` para no romperse cuando el
+	// sitio se sirve bajo un subdirectorio. El resto son anclas de esta página.
 	const links = [
 		{ href: '#features', label: 'Funciones' },
 		{ href: '#how', label: 'Cómo funciona' },
+		{ href: `${base}/docs`, label: 'Documentación' },
 		{ href: '#testimonios', label: 'Clientes' },
 		{ href: '#faq', label: 'Preguntas' }
 	];
@@ -41,7 +45,7 @@
 					<li>
 						<a
 							href={link.href}
-							class="rounded-lg px-3 py-2 text-sm text-fg-muted transition-colors duration-200 hover:text-fg"
+							class="text-fg-muted hover:text-fg rounded-lg px-3 py-2 text-sm transition-colors duration-200"
 						>
 							{link.label}
 						</a>
@@ -52,16 +56,20 @@
 			<div class="hidden items-center gap-2 md:flex">
 				<a
 					href="#cta"
-					class="group relative inline-flex items-center gap-1.5 overflow-hidden rounded-lg bg-fg px-4 py-2 text-sm font-semibold text-ink transition-transform duration-200 active:scale-[0.97]"
+					class="group bg-fg text-ink relative inline-flex items-center gap-1.5 overflow-hidden rounded-lg px-4 py-2 text-sm font-semibold transition-transform duration-200 active:scale-[0.97]"
 				>
 					Comienza YA!
-					<Icon name="arrow" size={15} class="transition-transform duration-200 group-hover:translate-x-0.5" />
+					<Icon
+						name="arrow"
+						size={15}
+						class="transition-transform duration-200 group-hover:translate-x-0.5"
+					/>
 				</a>
 			</div>
 
 			<!-- Mobile toggle -->
 			<button
-				class="inline-flex h-10 w-10 items-center justify-center rounded-lg text-fg md:hidden"
+				class="text-fg inline-flex h-10 w-10 items-center justify-center rounded-lg md:hidden"
 				onclick={() => (open = !open)}
 				aria-label="Menú"
 				aria-expanded={open}
@@ -79,7 +87,7 @@
 							<a
 								href={link.href}
 								onclick={() => (open = false)}
-								class="block rounded-lg px-3 py-3 text-sm text-fg-muted transition-colors hover:bg-white/5 hover:text-fg"
+								class="text-fg-muted hover:text-fg block rounded-lg px-3 py-3 text-sm transition-colors hover:bg-white/5"
 							>
 								{link.label}
 							</a>
@@ -89,7 +97,7 @@
 				<a
 					href="#cta"
 					onclick={() => (open = false)}
-					class="mt-2 flex items-center justify-center gap-1.5 rounded-lg bg-fg px-4 py-3 text-sm font-semibold text-ink"
+					class="bg-fg text-ink mt-2 flex items-center justify-center gap-1.5 rounded-lg px-4 py-3 text-sm font-semibold"
 				>
 					Comienza YA!
 					<Icon name="arrow" size={15} />
