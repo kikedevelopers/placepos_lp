@@ -12,12 +12,26 @@
 
 	const pageTitle = `Cambiar contraseña — ${SITE.name}`;
 
+	/**
+	 * Lanza la app a través de un iframe oculto.
+	 *
+	 * NO se usa `window.location.href`: si el sistema no tiene registrado el
+	 * esquema, el navegador falla con `ERR_UNKNOWN_URL_SCHEME` y DESCARTA la
+	 * página — el usuario se queda con una pestaña en blanco y sin ninguna
+	 * explicación. El iframe falla en silencio y la página sobrevive para
+	 * poder decirle qué pasó.
+	 */
 	function openApp() {
 		if (!deepLink) return;
 		launched = true;
-		// `location.href` y no `window.open`: los bloqueadores de popups matan
-		// la segunda, y un esquema propio no abre pestaña de todos modos.
-		window.location.href = deepLink;
+
+		const frame = document.createElement('iframe');
+		frame.style.display = 'none';
+		frame.src = deepLink;
+		document.body.appendChild(frame);
+		// Se retira enseguida: ya cumplió su función y dejarlo colgado ensucia
+		// el DOM en cada reintento.
+		window.setTimeout(() => frame.remove(), 1000);
 	}
 
 	onMount(() => {
@@ -35,7 +49,8 @@
 		window.history.replaceState({}, '', window.location.pathname);
 
 		// Intento automático. Si el navegador lo bloquea (algunos exigen un
-		// gesto del usuario), el botón de abajo queda para hacerlo a mano.
+		// gesto del usuario) o el sistema no conoce el esquema, la página sigue
+		// en pie y el botón de abajo queda para reintentar a mano.
 		openApp();
 	});
 </script>
