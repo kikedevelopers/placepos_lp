@@ -22,7 +22,7 @@ export const DOC_MODULES: DocModule[] = [
 		capabilities: [
 			{
 				title: 'Buscar y escanear',
-				desc: 'Encuentra productos por nombre, código de barras o SKU. Sirve el lector o el teclado, así nadie necesita saberse los precios de memoria.'
+				desc: 'Encuentra productos por nombre, código de barras o SKU. Con el lector no tienes que buscar nada: el producto entra directo al carrito y suma +1 en cada disparo.'
 			},
 			{
 				title: 'Cantidades con decimales',
@@ -49,12 +49,20 @@ export const DOC_MODULES: DocModule[] = [
 				desc: 'Creas el cliente sin salir del POS y ves su historial y lo que te debe antes de fiarle otra vez.'
 			},
 			{
+				title: 'Ganancia y margen en vivo',
+				desc: 'Bajo el total del carrito ves cuánto estás ganando en esa venta y con qué margen, antes de cobrar. Solo lo ve quien tenga el permiso.'
+			},
+			{
 				title: 'Gastos y caja a la mano',
 				desc: 'Registras un gasto y ves el saldo de tu caja sin cambiar de pantalla. Al final cierras y cuadras.'
 			},
 			{
+				title: 'Enviar el ticket por WhatsApp',
+				desc: 'Al terminar puedes mandarle la factura al cliente por WhatsApp, como imagen, sin salir del sistema.'
+			},
+			{
 				title: 'Atajos de teclado',
-				desc: 'F1 buscar, F4 registrar, F12 reimprimir la última, Esc limpiar. El mostrador no espera al mouse.'
+				desc: 'F1 buscar, F2 cambiar de pestaña, F3 ver lo que le has vendido al cliente, F4 registrar, F12 reimprimir la última, Esc limpiar. Ctrl+G gasto rápido, Ctrl+C cliente nuevo. El mostrador no espera al mouse.'
 			},
 			{
 				title: 'Sigue vendiendo sin internet',
@@ -79,7 +87,7 @@ export const DOC_MODULES: DocModule[] = [
 			},
 			{
 				term: 'Qué descuenta el stock',
-				desc: 'Si vendes una presentación (media libra, paquete), el inventario se descuenta del producto padre en su unidad mínima, no de la presentación. Por eso nunca se descuadran entre sí.'
+				desc: 'Si vendes una presentación (media libra, paquete), el inventario se descuenta del producto padre en su unidad mínima, no de la presentación. Si vendes un combo, se descuenta de cada uno de los productos con los que se arma. Por eso nunca se descuadran entre sí.'
 			}
 		],
 		relations: [
@@ -100,6 +108,10 @@ export const DOC_MODULES: DocModule[] = [
 				desc: 'después de cobrar puedes cargar el domicilio y asignárselo a un repartidor.'
 			},
 			{
+				to: 'whatsapp',
+				desc: 'desde el ticket le envías la factura al cliente a su WhatsApp.'
+			},
+			{
 				to: 'informes',
 				desc: 'cada venta alimenta el tablero, el informe de ventas y el cierre del día.'
 			}
@@ -111,7 +123,7 @@ export const DOC_MODULES: DocModule[] = [
 			'Repites hasta armar el ticket. Ves total, ganancia y margen en vivo.',
 			'Si vas a fiar o usar anticipo, asignas el cliente (es obligatorio).',
 			'Registras la venta (F4) y cobras: efectivo te calcula las devueltas.',
-			'Al confirmar baja el inventario, entra la plata y puedes imprimir o cargar el domicilio.',
+			'Al confirmar baja el inventario, entra la plata y puedes imprimir, enviar el ticket por WhatsApp o cargar el domicilio.',
 			'Al terminar el día cierras la caja: cuentas el efectivo, registras la diferencia y la caja queda en su base.'
 		]
 	},
@@ -185,6 +197,10 @@ export const DOC_MODULES: DocModule[] = [
 			{
 				to: 'tesoreria',
 				desc: 'los anticipos y los abonos entran a la caja, banco o billetera que elijas.'
+			},
+			{
+				to: 'whatsapp',
+				desc: 'el teléfono que guardas en su ficha es al que le llega el ticket.'
 			},
 			{ to: 'informes', desc: 'alimentan la cartera (quién te debe) y el recaudo real del día.' }
 		],
@@ -260,6 +276,10 @@ export const DOC_MODULES: DocModule[] = [
 				desc: 'Das de alta el producto y luego las formas de venderlo (por libra, por unidad, por paquete) sin duplicar existencias.'
 			},
 			{
+				title: 'Combos con receta',
+				desc: 'Armas un producto nuevo a partir de otros (un anchetón, un desayuno). Su costo y cuántos puedes armar salen solos de lo que tengas.'
+			},
+			{
 				title: 'Empaques y categorías',
 				desc: 'Hablas en cajas, libras o docenas en vez de contar unidad por unidad, y agrupas el catálogo para filtrar y medir por grupo.'
 			},
@@ -288,6 +308,18 @@ export const DOC_MODULES: DocModule[] = [
 				desc: 'Cada cambio queda registrado: si vino de una compra, de una edición manual o heredado del producto padre.'
 			},
 			{
+				title: 'Modo auditor',
+				desc: 'Un interruptor cambia la tabla a la vista del que revisa: solo productos base, sin precios de venta, y con el costo total de cada uno, la fecha de la última compra y la de creación.'
+			},
+			{
+				title: 'Duplicar un item',
+				desc: 'Copias un producto con todo lo suyo (costo, precios, categoría, receta) para crear el parecido en segundos. El stock arranca en cero y el código de barras no se copia.'
+			},
+			{
+				title: 'Buscar con el lector',
+				desc: 'Escaneas un producto y la tabla se filtra sola: no tienes que hacer clic en el buscador ni teclear el código.'
+			},
+			{
 				title: 'Disponible en venta / en compra',
 				desc: 'Controlas si el producto aparece en el POS, en compras o en ambos, para que la materia prima no ensucie la caja.'
 			},
@@ -302,6 +334,12 @@ export const DOC_MODULES: DocModule[] = [
 				desc: 'El base es el producto real: el que tiene el stock y el costo. La presentación es una forma de venderlo; cuelga del base y no tiene existencias propias. Así vendes de mil formas con un solo montón de mercancía y sin descuadres.',
 				example:
 					'Base: LINAZA X LIBRA → 20 libras en bodega, costo $3.705.\nPresentación: LINAZA MEDIA LIBRA → se vende a $3.000 y descuenta del mismo montón.'
+			},
+			{
+				term: 'El combo se arma con otros productos',
+				desc: 'Un combo tampoco tiene stock propio: es una receta. Le dices con qué productos se arma y en qué cantidad, y el sistema hace el resto: el costo es la suma de lo que lleva y las unidades disponibles son las que alcanzas a armar con lo que tengas (manda el ingrediente que primero se acaba). Al venderlo se descuenta de cada componente, no del combo. La receta solo admite productos base: nada de combos dentro de combos ni presentaciones, para que el descuento nunca sea ambiguo. Y no se compra ni entra en la valorización del inventario: la mercancía ya está contada en sus componentes.',
+				example:
+					'ANCHETA = 1 café ($4.000) + 2 galletas ($1.500 c/u) → costo $7.000.\nTienes 10 cafés y 12 galletas → puedes armar 6 anchetas.\nVendes una → bajan 1 café y 2 galletas.'
 			},
 			{
 				term: 'Empaque y su valor',
@@ -343,6 +381,7 @@ export const DOC_MODULES: DocModule[] = [
 			'Pon el precio (o el margen) y agrega precios extra si manejas mayorista.',
 			'Decide si va al POS, a compras o a ambos.',
 			'Nueva presentación: eliges el padre, el empaque o el peso, y el precio. El costo y el stock salen solos.',
+			'Nuevo combo: le pones nombre, le agregas los productos que lo componen y su precio. El costo y cuántos puedes armar se calculan solos.',
 			'Si tienes muchos productos, usa la plantilla de Excel en vez de cargarlos uno a uno.'
 		]
 	},
@@ -363,6 +402,10 @@ export const DOC_MODULES: DocModule[] = [
 			{
 				title: 'Crear productos al vuelo',
 				desc: 'Si el proveedor te trajo algo que no tienes en el catálogo, lo creas sin salir de la compra.'
+			},
+			{
+				title: 'Todo el catálogo a la mano',
+				desc: 'Si no quieres ir marcando producto por producto cuál se compra, enciendes un ajuste y todos los productos base aparecen en el buscador de compras.'
 			},
 			{
 				title: 'Flete y transportista',
@@ -450,6 +493,14 @@ export const DOC_MODULES: DocModule[] = [
 			'Es donde el sistema lleva la cuenta de dónde está tu plata en cada momento: la caja del mostrador, tus billeteras y tus cuentas de banco. Cada peso que entra por una venta o sale por una compra queda registrado en una de esas fuentes, con su saldo siempre al día.',
 		capabilities: [
 			{
+				title: 'Resumen: toda tu plata en una pantalla',
+				desc: 'El saldo de cada caja, billetera y banco, el total del negocio y el movimiento de todas las cuentas juntas, lo más reciente arriba.'
+			},
+			{
+				title: 'Ver solo el dinero líquido',
+				desc: 'Tocas una tarjeta (Cajeros, Bancos, Billeteras) y ese grupo sale del total. Útil para no contar la plata de los cajeros, que no se toca hasta el cierre.'
+			},
+			{
 				title: 'Cajas, billeteras y bancos',
 				desc: 'Creas cada bolsillo real de tu negocio con su saldo inicial y su nombre.'
 			},
@@ -471,7 +522,7 @@ export const DOC_MODULES: DocModule[] = [
 			},
 			{
 				title: 'Cierre de caja',
-				desc: 'Cuentas el efectivo real, concilias sobrante o faltante y mandas el excedente a donde quieras.'
+				desc: 'Cuentas el efectivo real, concilias sobrante o faltante y mandas el excedente a donde quieras. El dueño también puede cerrar la caja de un empleado.'
 			}
 		],
 		concepts: [
@@ -506,6 +557,7 @@ export const DOC_MODULES: DocModule[] = [
 			'Marca qué bancos deben aparecer en el POS al cobrar por transferencia.',
 			'Define la base de caja: cuánto efectivo debe quedar siempre para vueltas.',
 			'Durante el día, la plata entra y sale sola según lo que hagas en el POS, compras y gastos.',
+			'Cuando quieras saber cuánto tienes en total, entra a Tesorería → Resumen.',
 			'Al cerrar, cuentas el efectivo real y mandas el excedente a un banco o billetera.'
 		]
 	},
@@ -592,19 +644,31 @@ export const DOC_MODULES: DocModule[] = [
 			},
 			{
 				title: 'Informe de ventas',
-				desc: 'Qué facturas se hicieron, por quién, a quién y con qué ganancia. Con filtros por fecha, cliente, categoría o anulados.'
+				desc: 'Qué facturas se hicieron, por quién, a quién y con qué ganancia. Con filtros por fecha, cliente, categoría o anulados, y ordenando por la columna que quieras.'
 			},
 			{
 				title: 'Cartera',
-				desc: 'Quién te debe, cuánto y desde cuándo. Pendientes, vencidas o pagadas, con exportación e impresión.'
+				desc: 'Quién te debe, cuánto y desde cuándo. Pendientes, vencidas o pagadas, ordenables por columna, con exportación e impresión.'
 			},
 			{
 				title: 'Comparativa',
 				desc: '¿Voy mejor o peor? Compara semanas, meses o trimestres, o el mismo día contra meses anteriores.'
 			},
 			{
-				title: 'Finanzas del día y por rango',
-				desc: 'Ventas, recaudo de cartera, créditos nuevos, compras y saldos de tus fuentes, para un día o un período.'
+				title: 'Resumen del día',
+				desc: 'Una sola tabla con el día completo: cuánto entró en efectivo, cuánto por consignación banco por banco, qué se vendió (de contado y a crédito), qué salió y cuánta ganancia quedó de verdad.'
+			},
+			{
+				title: 'Cómo se comportó el día',
+				desc: 'Gráficas de las ventas hora por hora: a qué horas se mueve tu negocio y cuándo está muerto.'
+			},
+			{
+				title: 'Resumen extendido por rango',
+				desc: 'El mismo detalle para un período: una semana, un mes o el rango que necesites.'
+			},
+			{
+				title: 'Llevarte el resumen',
+				desc: 'El resumen del día sale en PDF o por la impresora de tickets, con el mismo desglose que ves en pantalla.'
 			},
 			{
 				title: 'Cajeros',
@@ -628,7 +692,13 @@ export const DOC_MODULES: DocModule[] = [
 			},
 			{
 				term: 'El recaudo de cartera va en su propio bloque',
-				desc: 'Si un cliente abona hoy $200.000 de una deuda vieja, eso es plata real de hoy, pero no es una venta de hoy. Por eso aparece aparte: si se sumara a las ventas, contarías la misma venta dos veces.'
+				desc: 'Si un cliente abona hoy $200.000 de una deuda vieja, eso es plata real de hoy, pero no es una venta de hoy. Por eso aparece aparte: si se sumara a las ventas, contarías la misma venta dos veces. Y se separa además por antigüedad: lo que abonaron de créditos de días anteriores va aparte de lo que abonaron hoy mismo de un crédito de hoy.'
+			},
+			{
+				term: 'Ganancia real del día',
+				desc: 'Es la ganancia que de verdad te quedó en la mano: a la ganancia de todo lo vendido hoy se le restan los gastos variables del día y la ganancia del crédito que todavía nadie ha pagado. Los abonos a proveedores y a transportistas salen de tu caja pero NO se restan aquí: esa plata ya estaba contada como costo de la mercancía.',
+				example:
+					'Vendiste con $400.000 de ganancia, $80.000 de ella en créditos sin cobrar y gastaste $50.000 en domicilios.\nGanancia real: $400.000 − $50.000 − $80.000 = $270.000.'
 			},
 			{
 				term: 'Punto de equilibrio',
@@ -652,9 +722,78 @@ export const DOC_MODULES: DocModule[] = [
 		flow: [
 			'Abre Inicio y mira si cumpliste la cuota de hoy.',
 			'Revisa el resumen del día: efectivo, transferencias, créditos y gastos.',
-			'Si algo no cuadra, entra a Finanzas → Resumen del día y compara ventas contra recaudo.',
+			'Si algo no cuadra, entra a Informes → Resumen y sigue el desglose del día: qué entró, qué se vendió, qué salió y qué ganancia quedó.',
 			'Cierra con el informe de Cajeros e imprime el cierre.',
-			'Para el mes: Resumen extendido, Comparativa contra el mes pasado y Cartera para perseguir lo que te deben.'
+			'Para el mes: la pestaña de Resumen extendido, la Comparativa contra el mes pasado y la Cartera para perseguir lo que te deben.'
+		]
+	},
+
+	// ──────────────────────────────────────────────────────────────── WhatsApp
+	{
+		id: 'whatsapp',
+		icon: 'message',
+		kicker: 'Conectar',
+		title: 'Mensajería por WhatsApp',
+		summary:
+			'Conectas el WhatsApp de tu negocio y le mandas al cliente su factura apenas le cobras, sin sacar el celular ni tomarle foto al ticket. Está en fase de pruebas (Beta): úsala con cabeza y solo con clientes que esperan tu mensaje.',
+		capabilities: [
+			{
+				title: 'Conectar con un QR',
+				desc: 'Escaneas un código desde tu teléfono, igual que WhatsApp Web. La sesión queda guardada y se reconecta sola cada vez que abres PlacePos.'
+			},
+			{
+				title: 'Ver y cerrar la sesión',
+				desc: 'Ves qué número está conectado y puedes desvincularlo cuando quieras.'
+			},
+			{
+				title: 'Mensaje de prueba',
+				desc: 'Escribes un número y le mandas un mensaje genérico para comprobar que todo quedó bien.'
+			},
+			{
+				title: 'Enviar el ticket al cliente',
+				desc: 'Desde la factura eliges "Compartir por WhatsApp" y le llega la misma imagen que descargarías, con un saludo.'
+			},
+			{
+				title: 'Envíos espaciados',
+				desc: 'Los tickets salen en fila, uno por uno y con pausas de unos segundos entre cada uno. Es lo que hace que WhatsApp no te vea como un robot.'
+			},
+			{
+				title: 'Uso responsable',
+				desc: 'Antes de activarla lees y aceptas una vez las recomendaciones: a quién sí escribirle, qué evitar y por qué.'
+			}
+		],
+		concepts: [
+			{
+				term: 'Es tu propio WhatsApp, no una cuenta aparte',
+				desc: 'PlacePos vincula tu número real como un dispositivo más, igual que WhatsApp Web: los mensajes salen de tu número de siempre y quedan en tus chats. Si desvinculas el dispositivo desde el teléfono, hay que volver a escanear el QR.'
+			},
+			{
+				term: 'Por qué el sistema te hace esperar',
+				desc: 'WhatsApp limita las cuentas que mandan muchos mensajes seguidos. Por eso el envío de tickets va en fila con pausas, el botón de compartir se bloquea unos segundos y el de prueba un minuto entero. No es lentitud: es lo que protege tu número.'
+			},
+			{
+				term: 'A quién se le puede enviar',
+				desc: 'Solo a facturas con cliente asignado y con un teléfono válido guardado en su ficha. Un celular colombiano de 10 dígitos se completa solo con el indicativo. Si el número no tiene WhatsApp, el sistema te lo dice antes de intentar el envío.',
+				example:
+					'Cliente sin teléfono → el botón queda apagado.\nTeléfono 3001234567 → se envía a +57 300 123 4567.'
+			},
+			{
+				term: 'Quién la activa',
+				desc: 'La conexión es del negocio y solo la maneja el dueño desde Configuraciones. Enviar tickets, en cambio, lo puede hacer cualquiera que abra una factura, porque usa la conexión ya establecida.'
+			}
+		],
+		relations: [
+			{ to: 'pos', desc: 'el ticket que se envía es el de la venta que acabas de cobrar.' },
+			{ to: 'clientes', desc: 'el número al que llega es el de la ficha del cliente.' },
+			{ to: 'configuracion', desc: 'la cuenta se conecta desde el tab WhatsApp (Beta).' }
+		],
+		flow: [
+			'Configuraciones → WhatsApp (Beta) y aceptas la descarga de responsabilidad.',
+			'Generas el código QR.',
+			'En tu teléfono: WhatsApp → Ajustes → Dispositivos vinculados → Vincular un dispositivo, y escaneas.',
+			'Te mandas un mensaje de prueba para confirmar que quedó conectado.',
+			'Cobras una venta con cliente y abres su ticket.',
+			'Compartir → Compartir por WhatsApp: el ticket entra a la fila y sale en unos segundos.'
 		]
 	},
 
@@ -693,11 +832,15 @@ export const DOC_MODULES: DocModule[] = [
 			},
 			{
 				title: 'Permisos por área',
-				desc: '22 permisos agrupados: catálogos, tesorería, terceros, proveedores, informes, operación y sistema.'
+				desc: '22 permisos agrupados: general, catálogos, tesorería, terceros, proveedores, informes, operación y sistema.'
 			},
 			{
 				title: 'Base de caja y ajustes',
 				desc: 'Fijas con cuánto efectivo abre cada quien y corriges su saldo dejando la nota del porqué.'
+			},
+			{
+				title: 'Cerrarle la caja a un empleado',
+				desc: 'Desde su ficha ves cuánto tiene en caja y puedes cerrársela tú, sin que él tenga que entrar al punto de venta.'
 			}
 		],
 		concepts: [
@@ -750,12 +893,16 @@ export const DOC_MODULES: DocModule[] = [
 				desc: 'Márgenes sugeridos, control estricto de stock, puntos de cliente e incluir o no los pedidos en los informes.'
 			},
 			{
+				title: 'Compras a proveedores',
+				desc: 'Decides si en el buscador de compras aparece todo el catálogo o solo lo que marcaste como "disponible para compra".'
+			},
+			{
 				title: 'Impresora',
 				desc: 'Configuras la impresora térmica de tickets para que la factura salga como debe.'
 			},
 			{
-				title: 'Alertas',
-				desc: 'Aviso automático de clientes que llevan mucho sin comprar. Puedes lanzarlo cuando quieras.'
+				title: 'WhatsApp (Beta)',
+				desc: 'Conectas la cuenta de WhatsApp del negocio escaneando un QR, para enviarles los tickets a tus clientes. Solo el dueño.'
 			},
 			{
 				title: 'Respaldos',
@@ -787,6 +934,7 @@ export const DOC_MODULES: DocModule[] = [
 		relations: [
 			{ to: 'pos', desc: 'los ajustes cambian cómo se comporta la caja al vender.' },
 			{ to: 'equipo', desc: 'el permiso de configuración decide quién entra aquí.' },
+			{ to: 'whatsapp', desc: 'la cuenta de WhatsApp del negocio se conecta desde aquí.' },
 			{
 				to: 'informes',
 				desc: 'la meta del mes y si los pedidos cuentan como ingreso se definen aquí.'
@@ -801,5 +949,6 @@ export const DOC_GROUPS: DocGroup[] = [
 	{ title: 'Abastecer', moduleIds: ['inventario', 'compras'] },
 	{ title: 'Tu dinero', moduleIds: ['tesoreria', 'gastos'] },
 	{ title: 'Entender', moduleIds: ['informes'] },
+	{ title: 'Conectar', moduleIds: ['whatsapp'] },
 	{ title: 'Tu equipo', moduleIds: ['equipo', 'configuracion'] }
 ];

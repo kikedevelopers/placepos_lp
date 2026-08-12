@@ -8,6 +8,9 @@ export const SITE = {
 	description:
 		'PlacePos es el ERP todo-en-uno para tu negocio: punto de venta, inventario, compras, gastos, tesorería, créditos y reportes financieros en una sola plataforma. Vende más, controla todo y decide con datos en tiempo real.',
 	email: 'hola@placepos.com',
+	// API cloud al que llama la página de activación de cuenta (`/activar`).
+	// Se puede apuntar a otro entorno en tiempo de build con PUBLIC_API_URL.
+	apiUrl: 'https://foxpos.kikedevs.com',
 	ctaPrimary: 'Empieza gratis',
 	version: '1.0.0',
 	// Enlaces PERMANENTES (siempre apuntan a la última versión publicada por el
@@ -22,6 +25,10 @@ export interface Feature {
 	icon: string;
 	title: string;
 	desc: string;
+	/** Ocupa la fila completa: cierre destacado del grid (layout horizontal). */
+	wide?: boolean;
+	/** Sello sobre el título (ej. "Nuevo"). */
+	badge?: string;
 }
 
 export const FEATURES: Feature[] = [
@@ -69,6 +76,13 @@ export const FEATURES: Feature[] = [
 		icon: 'bell',
 		title: 'Notificaciones en vivo',
 		desc: 'Enterate al instante de lo que pasa en tu negocio: anulaciones, gastos y movimientos clave llegan a tu campana en tiempo real.'
+	},
+	{
+		icon: 'message',
+		title: 'Tickets por WhatsApp',
+		desc: 'Conecta el WhatsApp de tu negocio y envíale la factura al cliente apenas le cobras. Sale de tu propio número, sin sacar el celular ni tomarle foto al ticket.',
+		wide: true,
+		badge: 'Nuevo · Beta'
 	}
 ];
 
