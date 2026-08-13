@@ -1,3 +1,5 @@
+import { dev } from '$app/environment';
+
 export const SITE = {
 	name: 'PlacePos',
 	// Dominio REAL donde vive el sitio (custom domain de GitHub Pages). Es la
@@ -8,9 +10,15 @@ export const SITE = {
 	description:
 		'PlacePos es el ERP todo-en-uno para tu negocio: punto de venta, inventario, compras, gastos, tesorería, créditos y reportes financieros en una sola plataforma. Vende más, controla todo y decide con datos en tiempo real.',
 	email: 'hola@placepos.com',
-	// API cloud al que llama la página de activación de cuenta (`/activar`).
-	// Se puede apuntar a otro entorno en tiempo de build con PUBLIC_API_URL.
-	apiUrl: 'https://foxpos.kikedevs.com',
+	/**
+	 * API al que llaman las páginas que hablan con el backend (`/activar`).
+	 *
+	 * En desarrollo apunta al pos_api LOCAL: los tokens de activación y de
+	 * recuperación se emiten contra la base local, así que llamar a producción
+	 * dejaría el enlace siempre inválido — y, sin el origen de esta landing en
+	 * su CORS, el navegador ni siquiera dejaría leer la respuesta.
+	 */
+	apiUrl: dev ? 'http://localhost:3010' : 'https://foxpos.kikedevs.com',
 	ctaPrimary: 'Empieza gratis',
 	version: '1.0.0',
 	// Enlaces PERMANENTES (siempre apuntan a la última versión publicada por el

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { dev } from '$app/environment';
 	import Logo from '$lib/components/Logo.svelte';
 	import Icon from '$lib/components/Icon.svelte';
 	import { SITE } from '$lib/data/site';
@@ -42,7 +43,12 @@
 			status = body.payload?.already_activated ? 'already' : 'success';
 		} catch {
 			status = 'error';
-			message = 'No pudimos contactar al servidor. Revisa tu conexión e intenta de nuevo.';
+			// En desarrollo se añade a DÓNDE se intentó llamar: un fallo aquí casi
+			// siempre es el API apagado o su CORS sin el origen de esta landing, y
+			// "revisa tu conexión" manda a buscar donde no es.
+			message = dev
+				? `No se pudo contactar a ${SITE.apiUrl}. ¿Está levantado el API y su CORS incluye ${window.location.origin}?`
+				: 'No pudimos contactar al servidor. Revisa tu conexión e intenta de nuevo.';
 		}
 	}
 
