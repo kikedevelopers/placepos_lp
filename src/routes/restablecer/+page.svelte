@@ -116,7 +116,7 @@
 						<li>· Vuelve a pulsar el botón de arriba.</li>
 					</ul>
 					<a
-						href="{SITE.domain}/#descargas"
+						href="{SITE.domain}/#cta"
 						class="text-brand mt-4 inline-block text-xs hover:underline"
 					>
 						Descargar PlacePos

@@ -11,8 +11,9 @@
 	const links = [
 		{ href: '#features', label: 'Funciones' },
 		{ href: '#how', label: 'Cómo funciona' },
-		{ href: `${base}/docs`, label: 'Documentación' },
 		{ href: '#testimonios', label: 'Clientes' },
+		{ href: '#precios', label: 'Precios' },
+		{ href: `${base}/docs`, label: 'Documentación' },
 		{ href: '#faq', label: 'Preguntas' }
 	];
 
@@ -45,7 +46,7 @@
 					<li>
 						<a
 							href={link.href}
-							class="text-fg-muted hover:text-fg rounded-lg px-3 py-2 text-sm transition-colors duration-200"
+							class="text-fg-muted hover:text-fg rounded-lg px-2.5 py-2 text-sm whitespace-nowrap transition-colors duration-200 lg:px-3"
 						>
 							{link.label}
 						</a>

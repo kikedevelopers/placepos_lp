@@ -8,6 +8,7 @@
 			links: [
 				{ label: 'Funciones', href: '#features' },
 				{ label: 'Cómo funciona', href: '#how' },
+				{ label: 'Precios', href: '#precios' },
 				{ label: 'Clientes', href: '#testimonios' },
 				{ label: 'Preguntas', href: '#faq' }
 			]
@@ -22,10 +23,13 @@
 			]
 		},
 		{
+			// El teléfono salió de la landing y las redes entran después; por ahora
+			// el correo es el único canal, y "Contáctanos" ya no puede apuntar a la
+			// sección de descarga porque allí no hay a quién escribirle.
 			title: 'Contacto',
 			links: [
 				{ label: SITE.email, href: `mailto:${SITE.email}` },
-				{ label: 'Contáctanos', href: '#cta' }
+				{ label: 'Descargar PlacePos', href: '#cta' }
 			]
 		}
 	];

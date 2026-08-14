@@ -6,10 +6,12 @@
 	import Story from '$lib/components/Story.svelte';
 	import Stats from '$lib/components/Stats.svelte';
 	import Testimonials from '$lib/components/Testimonials.svelte';
+	import Pricing from '$lib/components/Pricing.svelte';
 	import Faq from '$lib/components/Faq.svelte';
 	import Downloads from '$lib/components/Downloads.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import { SITE, FAQ } from '$lib/data/site';
+	import { PRICING } from '$lib/data/pricing';
 
 	const title = `${SITE.name} — ${SITE.tagline}`;
 	const url = SITE.domain;
@@ -23,12 +25,25 @@
 		operatingSystem: 'Web',
 		description: SITE.description,
 		url,
-		offers: {
-			'@type': 'Offer',
-			price: '0',
-			priceCurrency: 'COP',
-			description: 'Empieza gratis'
-		},
+		// Precios REALES. Publicar `price: 0` con "Empieza gratis" cuando lo que
+		// hay es una prueba de días es una señal falsa para Google y una promesa
+		// que la app no cumple; el plan gratuito no existe.
+		offers: [
+			{
+				'@type': 'Offer',
+				price: String(PRICING.annual_price),
+				priceCurrency: PRICING.currency,
+				name: 'Plan anual',
+				description: `Plan anual de ${SITE.name}, con ${PRICING.trial_days} días de prueba`
+			},
+			{
+				'@type': 'Offer',
+				price: String(PRICING.monthly_price),
+				priceCurrency: PRICING.currency,
+				name: 'Plan mensual',
+				description: `Plan mensual de ${SITE.name}, con ${PRICING.trial_days} días de prueba`
+			}
+		],
 		featureList: [
 			'Punto de venta',
 			'Inventario en tiempo real',
@@ -113,6 +128,9 @@
 	<Story />
 	<Stats />
 	<Testimonials />
+	<!-- Precios antes del FAQ: la objeción que sigue al precio se responde
+	     inmediatamente abajo, sin que el cliente tenga que ir a buscarla. -->
+	<Pricing />
 	<Faq />
 	<Downloads />
 </main>

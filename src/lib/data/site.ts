@@ -1,4 +1,6 @@
 import { dev } from '$app/environment';
+import { PRICING } from './pricing';
+import { annualCostOfMonthly, annualSavings, formatCop } from '$lib/utils/pricing';
 
 export const SITE = {
 	name: 'PlacePos',
@@ -19,7 +21,10 @@ export const SITE = {
 	 * su CORS, el navegador ni siquiera dejaría leer la respuesta.
 	 */
 	apiUrl: dev ? 'http://localhost:3010' : 'https://foxpos.kikedevs.com',
-	ctaPrimary: 'Empieza gratis',
+	// "Empieza gratis" sonaba a plan gratuito, y no existe: lo que hay es una
+	// prueba de días. Ahora que los precios están publicados, la promesa del
+	// botón principal tiene que coincidir con lo que el cliente encuentra abajo.
+	ctaPrimary: `Pruébalo ${PRICING.trial_days} días gratis`,
 	version: '1.0.0',
 	// Enlaces PERMANENTES (siempre apuntan a la última versión publicada por el
 	// release action de placepos; se sobrescriben en cada push a main).
@@ -185,6 +190,18 @@ export const FAQ: FaqItem[] = [
 	{
 		q: '¿Puedo manejar varias sucursales?',
 		a: 'Sí. Administras todas tus sedes desde una sola cuenta, con datos independientes por negocio y una vista consolidada cuando la necesitas.'
+	},
+	{
+		q: '¿Qué pasa cuando terminan los días de prueba?',
+		a: 'Eliges plan y sigues donde ibas: tus productos, tus ventas y tus reportes quedan tal como los dejaste. No te pedimos tarjeta para probar, así que si decides que no es para ti, simplemente no pagas nada.'
+	},
+	{
+		q: '¿Por qué el plan anual es más barato?',
+		a: `Porque un negocio que se compromete un año nos permite planear el soporte y el desarrollo con calma, y ese ahorro te lo devolvemos: pagando mes a mes gastas ${formatCop(annualCostOfMonthly())} al año, y con el plan anual pagas ${formatCop(PRICING.annual_price)}. Son ${formatCop(annualSavings())} que se quedan en tu caja por el mismo producto.`
+	},
+	{
+		q: '¿El precio incluye todo o hay módulos aparte?',
+		a: 'Incluye todo: punto de venta, inventario, compras, gastos, tesorería, créditos, reportes y las actualizaciones que salgan durante tu suscripción. Lo único que se cotiza aparte es cada sucursal adicional, porque es un negocio más dentro de tu cuenta.'
 	},
 	{
 		q: '¿Mis datos están seguros?',

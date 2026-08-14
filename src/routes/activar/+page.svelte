@@ -128,7 +128,7 @@
 					<Icon name="arrow" size={16} />
 				</a>
 				<a
-					href="{SITE.domain}/#descargas"
+					href="{SITE.domain}/#cta"
 					class="text-fg-muted hover:text-fg text-sm transition-colors duration-200"
 				>
 					Descargar PlacePos
