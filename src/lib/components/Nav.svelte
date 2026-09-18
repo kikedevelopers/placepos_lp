@@ -2,9 +2,20 @@
 	import { base } from '$app/paths';
 	import Logo from './Logo.svelte';
 	import Icon from './Icon.svelte';
+	import { session } from '$lib/stores/session.svelte';
 
 	let scrolled = $state(false);
 	let open = $state(false);
+
+	// Quien ya entró no necesita que le ofrezcan iniciar sesión: el mismo botón
+	// lo lleva a su cuenta. Hasta que la sesión se lee (`ready`) se muestra la
+	// versión de invitado, que es la correcta para la inmensa mayoría de visitas
+	// y evita el parpadeo de un "Mi cuenta" que desaparece.
+	const accountLink = $derived(
+		session.ready && session.isAuthenticated
+			? { href: `${base}/panel`, label: 'Mi cuenta' }
+			: { href: `${base}/ingresar`, label: 'Iniciar sesión' }
+	);
 
 	// `/docs` es una página aparte y va con `base` para no romperse cuando el
 	// sitio se sirve bajo un subdirectorio. El resto son anclas de esta página.
@@ -56,6 +67,12 @@
 
 			<div class="hidden items-center gap-2 md:flex">
 				<a
+					href={accountLink.href}
+					class="text-fg-muted hover:text-fg rounded-lg px-3 py-2 text-sm whitespace-nowrap transition-colors duration-200"
+				>
+					{accountLink.label}
+				</a>
+				<a
 					href="#cta"
 					class="group bg-fg text-ink relative inline-flex items-center gap-1.5 overflow-hidden rounded-lg px-4 py-2 text-sm font-semibold transition-transform duration-200 active:scale-[0.97]"
 				>
@@ -95,6 +112,13 @@
 						</li>
 					{/each}
 				</ul>
+				<a
+					href={accountLink.href}
+					onclick={() => (open = false)}
+					class="text-fg-muted hover:text-fg mt-1 block rounded-lg px-3 py-3 text-sm transition-colors hover:bg-white/5"
+				>
+					{accountLink.label}
+				</a>
 				<a
 					href="#cta"
 					onclick={() => (open = false)}

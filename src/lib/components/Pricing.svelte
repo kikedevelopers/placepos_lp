@@ -1,11 +1,26 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import Icon from './Icon.svelte';
 	import { reveal } from '$lib/actions/reveal';
 	import { parallax } from '$lib/actions/parallax';
-	import { PRICING } from '$lib/data/pricing';
+	import { PRICING, type PlanId } from '$lib/data/pricing';
+	import { session } from '$lib/stores/session.svelte';
 	import { buildPlans, dailyCost, formatCop } from '$lib/utils/pricing';
 
 	const plans = buildPlans();
+
+	/**
+	 * A dónde lleva el botón de un plan.
+	 *
+	 * Para contratar hay que tener cuenta, así que quien no ha entrado va al
+	 * login (que ofrece registrarse) y quien ya entró va directo a su panel. El
+	 * plan elegido viaja en la URL para que, después de dar el rodeo, llegue al
+	 * plan que había escogido y no a una pantalla en blanco.
+	 */
+	const planHref = (id: PlanId): string =>
+		session.ready && session.isAuthenticated
+			? `${base}/panel?plan=${id}`
+			: `${base}/ingresar?plan=${id}`;
 </script>
 
 <section id="precios" class="relative scroll-mt-24 overflow-hidden py-20 sm:py-28">
@@ -127,7 +142,7 @@
 					</ul>
 
 					<a
-						href="#cta"
+						href={planHref(plan.id)}
 						class="relative mt-8 inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-base font-semibold transition-all duration-200 active:scale-[0.98] {plan.highlighted
 							? 'hover:shadow-glow text-white'
 							: 'text-fg border border-white/[0.12] bg-white/[0.04] hover:bg-white/[0.08]'}"
