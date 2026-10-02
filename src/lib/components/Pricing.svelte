@@ -3,6 +3,8 @@
 	import Icon from './Icon.svelte';
 	import { reveal } from '$lib/actions/reveal';
 	import { parallax } from '$lib/actions/parallax';
+	import { tilt } from '$lib/actions/tilt';
+	import { magnetic } from '$lib/actions/magnetic';
 	import { PRICING, type PlanId } from '$lib/data/pricing';
 	import { session } from '$lib/stores/session.svelte';
 	import { buildPlans, dailyCost, formatCop } from '$lib/utils/pricing';
@@ -24,11 +26,14 @@
 </script>
 
 <section id="precios" class="relative scroll-mt-24 overflow-hidden py-20 sm:py-28">
-	<div
-		class="orb top-1/4 left-1/2 h-96 w-96 -translate-x-1/2"
-		style="background:radial-gradient(circle,#7c5cff,transparent 65%);opacity:0.25"
-		use:parallax={{ speed: 0.3 }}
-	></div>
+	<div class="pointer-events-none absolute inset-0 -z-10">
+		<div class="absolute top-1/4 left-1/2 -ml-48" use:parallax={{ speed: 0.3 }}>
+			<div
+				class="orb animate-drift h-96 w-96"
+				style="background:radial-gradient(circle,#7c5cff,transparent 65%);opacity:0.25"
+			></div>
+		</div>
+	</div>
 
 	<div class="relative mx-auto max-w-7xl px-4 sm:px-6">
 		<div class="mx-auto max-w-2xl text-center">
@@ -57,10 +62,11 @@
 		<div class="mx-auto mt-14 grid max-w-4xl items-stretch gap-6 md:grid-cols-2">
 			{#each plans as plan, i (plan.id)}
 				<article
-					class="reveal relative flex flex-col rounded-3xl p-7 transition-all duration-300 sm:p-8 {plan.highlighted
+					class="reveal tilt-spot relative flex flex-col rounded-3xl p-7 transition-[background-color,border-color,box-shadow] duration-300 sm:p-8 {plan.highlighted
 						? 'border-brand/40 bg-surface shadow-glow border md:-mt-4 md:pb-10'
 						: 'card-hairline bg-surface/40 hover:border-line/80'}"
 					use:reveal={{ delay: i * 110 }}
+					use:tilt={{ max: plan.highlighted ? 3 : 3.5, scale: 1.01 }}
 				>
 					{#if plan.highlighted}
 						<!-- Resplandor propio: la tarjeta que queremos que gane también se ve
@@ -143,8 +149,9 @@
 
 					<a
 						href={planHref(plan.id)}
-						class="relative mt-8 inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-base font-semibold transition-all duration-200 active:scale-[0.98] {plan.highlighted
-							? 'hover:shadow-glow text-white'
+						use:magnetic={{ strength: 0.25 }}
+						class="relative mt-8 inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl px-5 py-3.5 text-base font-semibold transition-[background-color,box-shadow] duration-200 active:scale-[0.98] {plan.highlighted
+							? 'hover:shadow-glow sheen text-white'
 							: 'text-fg border border-white/[0.12] bg-white/[0.04] hover:bg-white/[0.08]'}"
 						style={plan.highlighted
 							? 'background:linear-gradient(135deg,#8b5cf6,#6366f1 55%,#22d3ee)'

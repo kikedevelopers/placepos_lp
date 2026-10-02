@@ -18,15 +18,15 @@
 		Todo lo que tu negocio necesita, en un solo lugar
 	</p>
 	<div
-		class="group relative flex overflow-hidden"
+		class="marquee-pause group relative flex overflow-hidden"
 		style="mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)"
 	>
-		<div class="animate-marquee flex shrink-0 items-center gap-3 pr-3">
+		<div class="marquee-track animate-marquee flex shrink-0 items-center gap-3 pr-3">
 			{#each loop as item, i (i)}
 				<span
-					class="card-hairline inline-flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm text-fg-muted"
+					class="card-hairline text-fg-muted inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm whitespace-nowrap transition-colors duration-200 hover:text-fg"
 				>
-					<span class="h-1.5 w-1.5 rounded-full bg-brand"></span>
+					<span class="bg-brand h-1.5 w-1.5 rounded-full"></span>
 					{item}
 				</span>
 			{/each}

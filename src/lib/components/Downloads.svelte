@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { reveal } from '$lib/actions/reveal';
 	import { parallax } from '$lib/actions/parallax';
+	import { tilt } from '$lib/actions/tilt';
 	import { SITE } from '$lib/data/site';
 	import { PRICING } from '$lib/data/pricing';
 	import { formatCop, monthlyEquivalent } from '$lib/utils/pricing';
@@ -14,21 +15,25 @@
 <section id="cta" class="relative scroll-mt-24 overflow-hidden py-20 sm:py-28">
 	<div class="mx-auto max-w-7xl px-4 sm:px-6">
 		<div
-			class="reveal relative overflow-hidden rounded-[2rem] border border-white/[0.1] px-6 py-16 sm:px-12 sm:py-20"
+			class="reveal grain relative overflow-hidden rounded-[2rem] border border-white/[0.1] px-6 py-16 sm:px-12 sm:py-20"
 			style="background:linear-gradient(135deg,#0e0e1a,#14102a 55%,#0c1622)"
 			use:reveal
 		>
 			<div class="bg-grid pointer-events-none absolute inset-0 opacity-50"></div>
-			<div
-				class="orb top-0 left-1/4 h-72 w-72"
-				style="background:radial-gradient(circle,#7c5cff,transparent 65%)"
-				use:parallax={{ speed: 0.4 }}
-			></div>
-			<div
-				class="orb right-1/4 bottom-0 h-72 w-72"
-				style="background:radial-gradient(circle,#22d3ee,transparent 65%);opacity:0.4"
-				use:parallax={{ speed: 0.55 }}
-			></div>
+			<div class="pointer-events-none absolute inset-0">
+				<div class="absolute top-0 left-1/4" use:parallax={{ speed: 0.4 }}>
+					<div
+						class="orb animate-drift h-72 w-72"
+						style="background:radial-gradient(circle,#7c5cff,transparent 65%)"
+					></div>
+				</div>
+				<div class="absolute right-1/4 bottom-0" use:parallax={{ speed: 0.55 }}>
+					<div
+						class="orb h-72 w-72"
+						style="background:radial-gradient(circle,#22d3ee,transparent 65%);opacity:0.4"
+					></div>
+				</div>
+			</div>
 
 			<div class="relative mx-auto max-w-3xl text-center">
 				<h2 class="text-3xl font-extrabold tracking-tight sm:text-5xl">
@@ -45,14 +50,10 @@
 					<!-- Descarga Windows -->
 					<a
 						href={windowsInstaller}
-						class="group hover:border-brand/40 relative flex flex-col items-center overflow-hidden rounded-2xl border border-white/[0.1] bg-white/[0.03] p-8 text-center transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.06]"
+						use:tilt={{ max: 6, scale: 1.02 }}
+						class="group tilt-spot hover:border-brand/40 relative flex flex-col items-center overflow-hidden rounded-2xl border border-white/[0.1] bg-white/[0.03] p-8 text-center transition-[background-color,border-color] duration-300 hover:bg-white/[0.06]"
 						aria-label="Descargar PlacePos para Windows"
 					>
-						<div
-							class="pointer-events-none absolute -top-12 -right-12 h-32 w-32 rounded-full opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
-							style="background:radial-gradient(circle,rgba(34,211,238,0.45),transparent 70%)"
-						></div>
-
 						<span
 							class="text-fg flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.05] transition-transform duration-300 group-hover:scale-105"
 						>

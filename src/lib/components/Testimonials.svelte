@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Icon from './Icon.svelte';
 	import { reveal } from '$lib/actions/reveal';
+	import { tilt } from '$lib/actions/tilt';
 	import { TESTIMONIALS } from '$lib/data/site';
 </script>
 
@@ -22,8 +23,9 @@
 		<div class="mt-14 grid grid-cols-1 gap-5 md:grid-cols-3">
 			{#each TESTIMONIALS as t, i (t.name)}
 				<figure
-					class="reveal flex h-full flex-col rounded-2xl border border-white/[0.07] bg-surface/60 p-6 transition-all duration-300 hover:border-brand/25 hover:bg-surface"
+					class="reveal tilt-spot bg-surface/60 hover:border-brand/25 hover:bg-surface flex h-full flex-col rounded-2xl border border-white/[0.07] p-6 transition-[background-color,border-color] duration-300"
 					use:reveal={{ delay: i * 110 }}
+					use:tilt={{ max: 4.5, scale: 1.015 }}
 				>
 					<Icon name="quote" size={26} class="text-brand/50" />
 					<blockquote class="mt-4 flex-1 text-[15px] leading-relaxed text-fg">

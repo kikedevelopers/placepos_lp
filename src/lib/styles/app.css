@@ -4,6 +4,11 @@
    PlacePos — sistema de diseño
    Tema oscuro premium, acento violeta→índigo→cian. Tipografía Sora (display)
    + Inter (texto). Tokens expuestos a Tailwind v4 vía @theme.
+
+   El movimiento sigue la filosofía de Emil Kowalski / Apple: solo transform y
+   opacidad, curvas fuertes (nunca el ease-out de serie), nada de `scale(0)`,
+   y todo se degrada con prefers-reduced-motion. Las interacciones de cursor
+   (tilt, magnetic, glow) viven en `$lib/actions` y se apagan en táctil.
 ---------------------------------------------------------------------------- */
 @theme {
 	--font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -30,9 +35,14 @@
 	--color-amber: #ffb454;
 
 	--shadow-glow: 0 0 80px -20px rgba(124, 92, 255, 0.55);
+	--shadow-float: 0 30px 80px -40px rgba(0, 0, 0, 0.9), 0 12px 40px -24px rgba(124, 92, 255, 0.35);
 
-	--ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
-	--ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+	/* Curvas (Emil): las de serie son demasiado flojas para sentirse premium. */
+	--ease-out: cubic-bezier(0.23, 1, 0.32, 1); /* entradas/salidas UI */
+	--ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1); /* reveal, parallax */
+	--ease-in-out: cubic-bezier(0.77, 0, 0.175, 1); /* movimiento en pantalla */
+	--ease-drawer: cubic-bezier(0.32, 0.72, 0, 1); /* tipo iOS */
+	--ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* rebote medido */
 }
 
 /* ----------------------------------------------------------------------------
@@ -58,6 +68,13 @@ body {
 	color: #fff;
 }
 
+/* Foco visible premium: aro de marca, solo con teclado. */
+:focus-visible {
+	outline: 2px solid rgba(124, 92, 255, 0.7);
+	outline-offset: 2px;
+	border-radius: 6px;
+}
+
 h1,
 h2,
 h3,
@@ -65,6 +82,14 @@ h4 {
 	font-family: var(--font-display);
 	letter-spacing: -0.02em;
 	line-height: 1.05;
+}
+
+/* Tracking específico por tamaño (Apple): el display grande junta las letras,
+   el texto pequeño las deja respirar. Un solo letter-spacing sería erróneo en
+   algún lado. */
+.display-xl {
+	letter-spacing: -0.035em;
+	line-height: 1.02;
 }
 
 /* Scrollbar */
@@ -131,7 +156,21 @@ h4 {
 	background-size: 22px 22px;
 }
 
-/* Orbe de gradiente para parallax */
+/* Grano finísimo: rompe las bandas de los gradientes y da textura de "material".
+   SVG inline (feTurbulence) para no cargar ningún asset. */
+.grain::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	pointer-events: none;
+	opacity: 0.035;
+	mix-blend-mode: overlay;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Orbe de gradiente para parallax. `--px/--py` (si existen, de pointerGlow)
+   lo hacen derivar un pelín tras el cursor. */
 .orb {
 	position: absolute;
 	border-radius: 9999px;
@@ -139,6 +178,87 @@ h4 {
 	opacity: 0.55;
 	pointer-events: none;
 	will-change: transform;
+}
+
+/* ----------------------------------------------------------------------------
+   Luz que sigue al cursor (sección) — `use:pointerGlow`
+---------------------------------------------------------------------------- */
+.pointer-glow {
+	position: relative;
+}
+.pointer-glow::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	pointer-events: none;
+	opacity: var(--glow-o, 0);
+	transition: opacity 0.4s var(--ease-out);
+	background: radial-gradient(
+		40rem 40rem at var(--glow-x, 50%) var(--glow-y, 30%),
+		rgba(124, 92, 255, 0.14),
+		rgba(34, 211, 238, 0.06) 35%,
+		transparent 60%
+	);
+}
+
+/* ----------------------------------------------------------------------------
+   Spotlight por tarjeta — `use:tilt` (clase `.tilt-spot`)
+   El foco vive en ::before; el borde se ilumina en ::after. Ambos leen las
+   vars que escribe la acción, así que en táctil (sin acción) quedan en 0.
+---------------------------------------------------------------------------- */
+.tilt-spot {
+	position: relative;
+	isolation: isolate;
+}
+/* z-index:-1 dentro del contexto aislado: el foco se pinta SOBRE el fondo de la
+   tarjeta pero DEBAJO del contenido, sin forzar `position` en ningún hijo (eso
+   rompería los elementos `absolute`, como el badge de un plan). */
+.tilt-spot::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	border-radius: inherit;
+	pointer-events: none;
+	opacity: var(--spot-o, 0);
+	transition: opacity 0.3s var(--ease-out);
+	background: radial-gradient(
+		22rem 22rem at var(--spot-x, 50%) var(--spot-y, 50%),
+		rgba(124, 92, 255, 0.16),
+		transparent 60%
+	);
+}
+
+/* ----------------------------------------------------------------------------
+   Sheen: barrido de luz que cruza un botón al pasar el cursor (una sola vez,
+   no en bucle: en bucle sería ruido).
+---------------------------------------------------------------------------- */
+@media (hover: hover) and (pointer: fine) {
+	.sheen {
+		position: relative;
+		overflow: hidden;
+	}
+	.sheen::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: -150%;
+		width: 60%;
+		height: 100%;
+		pointer-events: none;
+		background: linear-gradient(
+			100deg,
+			transparent,
+			rgba(255, 255, 255, 0.28),
+			transparent
+		);
+		transform: skewX(-18deg);
+	}
+	.sheen:hover::after {
+		transition: left 0.7s var(--ease-out);
+		left: 150%;
+	}
 }
 
 /* ----------------------------------------------------------------------------
@@ -193,6 +313,17 @@ h4 {
 	}
 }
 
+/* Respiración lentísima de los orbes: vida sin distraer. */
+@keyframes drift {
+	0%,
+	100% {
+		transform: translate3d(0, 0, 0) scale(1);
+	}
+	50% {
+		transform: translate3d(0, -18px, 0) scale(1.05);
+	}
+}
+
 .animate-float {
 	animation: float-y 7s var(--ease-out-quint) infinite;
 }
@@ -203,18 +334,50 @@ h4 {
 	background-size: 200% 200%;
 	animation: gradient-pan 8s ease infinite;
 }
+.animate-drift {
+	animation: drift 14s var(--ease-in-out) infinite;
+}
 
-/* Scroll reveal: el `use:reveal` añade .is-in */
+/* La marquesina se frena (no se congela) al pasar el cursor: invita a leerla. */
+@media (hover: hover) and (pointer: fine) {
+	.marquee-track {
+		transition: animation-duration 0.4s var(--ease-out);
+	}
+	.marquee-pause:hover .marquee-track {
+		animation-play-state: paused;
+	}
+}
+
+/* ----------------------------------------------------------------------------
+   Scroll reveal — `use:reveal` añade `.is-in`.
+   "Materializa": sube un poco, se aclara y se enfoca a la vez. El blur mezcla
+   los estados y hace que la entrada se lea como un solo gesto, no como tres.
+---------------------------------------------------------------------------- */
 .reveal {
 	opacity: 0;
-	transform: translateY(28px);
+	transform: translateY(26px) scale(0.985);
+	filter: blur(6px);
 	transition:
-		opacity 0.7s var(--ease-out-quint),
-		transform 0.7s var(--ease-out-quint);
+		opacity 0.8s var(--ease-out),
+		transform 0.8s var(--ease-out),
+		filter 0.8s var(--ease-out);
 	will-change: transform, opacity;
 }
 .reveal.is-in {
 	opacity: 1;
+	transform: none;
+	filter: none;
+}
+
+/* Variantes direccionales para las columnas de "Cómo funciona". */
+.reveal-left {
+	transform: translateX(-34px) scale(0.985);
+}
+.reveal-right {
+	transform: translateX(34px) scale(0.985);
+}
+.reveal-left.is-in,
+.reveal-right.is-in {
 	transform: none;
 }
 
@@ -222,15 +385,26 @@ h4 {
 	html {
 		scroll-behavior: auto;
 	}
-	.reveal {
+	.reveal,
+	.reveal-left,
+	.reveal-right {
 		opacity: 1;
 		transform: none;
+		filter: none;
 		transition: none;
 	}
 	.animate-float,
 	.animate-marquee,
 	.animate-gradient,
+	.animate-drift,
 	.orb {
 		animation: none !important;
+	}
+	.pointer-glow::before,
+	.tilt-spot::before {
+		opacity: 0 !important;
+	}
+	.sheen::after {
+		display: none;
 	}
 }

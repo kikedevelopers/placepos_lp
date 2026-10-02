@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Icon from './Icon.svelte';
 	import { reveal } from '$lib/actions/reveal';
+	import { tilt } from '$lib/actions/tilt';
 	import { FEATURES } from '$lib/data/site';
 </script>
 
@@ -29,15 +30,12 @@
 		<div class="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
 			{#each FEATURES as f, i (f.title)}
 				<article
-					class="reveal group bg-surface/60 hover:border-brand/30 hover:bg-surface relative overflow-hidden rounded-2xl border border-white/[0.07] p-6 transition-all duration-300 hover:-translate-y-1 {f.wide
+					class="reveal tilt-spot group bg-surface/60 hover:border-brand/30 hover:bg-surface relative overflow-hidden rounded-2xl border border-white/[0.07] p-6 transition-[background-color,border-color] duration-300 {f.wide
 						? 'sm:col-span-2 sm:flex sm:items-center sm:gap-6 sm:p-7 lg:col-span-3'
 						: ''}"
 					use:reveal={{ delay: (i % 3) * 90 }}
+					use:tilt={{ max: f.wide ? 2.5 : 5, scale: 1.015 }}
 				>
-					<div
-						class="pointer-events-none absolute -top-12 -right-12 h-32 w-32 rounded-full opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
-						style="background:radial-gradient(circle,rgba(124,92,255,0.4),transparent 70%)"
-					></div>
 					<div
 						class="text-brand group-hover:text-brand-3 inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] transition-colors duration-300"
 					>

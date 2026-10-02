@@ -24,24 +24,30 @@
 		<div class="mt-12 flex flex-col gap-3">
 			{#each FAQ as item, i (item.q)}
 				<div
-					class="reveal overflow-hidden rounded-2xl border border-white/[0.08] bg-surface/60"
+					class="reveal bg-surface/60 overflow-hidden rounded-2xl border transition-colors duration-300 {openIndex ===
+					i
+						? 'border-brand/25'
+						: 'border-white/[0.08]'}"
 					use:reveal={{ delay: i * 70 }}
 				>
 					<button
-						class="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+						class="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors duration-200 hover:bg-white/[0.02]"
 						onclick={() => toggle(i)}
 						aria-expanded={openIndex === i}
 					>
-						<span class="text-[15px] font-semibold text-fg">{item.q}</span>
+						<span class="text-fg text-[15px] font-semibold">{item.q}</span>
 						<span
-							class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/10 text-brand transition-transform duration-300"
+							class="text-brand flex h-7 w-7 shrink-0 items-center justify-center rounded-full border transition-[transform,border-color,background-color] duration-300 ease-[var(--ease-out)] {openIndex ===
+							i
+								? 'border-brand/40 bg-brand/10'
+								: 'border-white/10'}"
 							style="transform:rotate({openIndex === i ? 0 : 45}deg)"
 						>
 							<Icon name="x" size={14} stroke={2.2} />
 						</span>
 					</button>
 					<div
-						class="grid transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+						class="grid transition-[grid-template-rows] duration-300 ease-[var(--ease-out-quint)]"
 						style="grid-template-rows:{openIndex === i ? '1fr' : '0fr'}"
 					>
 						<div class="overflow-hidden">

@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { base } from '$app/paths';
+	import { slide } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
 	import Logo from './Logo.svelte';
 	import Icon from './Icon.svelte';
+	import { magnetic } from '$lib/actions/magnetic';
 	import { session } from '$lib/stores/session.svelte';
 
 	let scrolled = $state(false);
@@ -40,26 +43,31 @@
 </script>
 
 <header
-	class="fixed inset-x-0 top-0 z-50 transition-all duration-300"
+	class="fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-[var(--ease-out)]"
 	class:py-3={!scrolled}
 	class:py-2={scrolled}
 >
 	<div class="mx-auto max-w-7xl px-4 sm:px-6">
 		<nav
-			class="flex items-center justify-between rounded-2xl px-4 py-2.5 transition-all duration-300 sm:px-5"
+			class="flex items-center justify-between rounded-2xl px-4 py-2.5 transition-all duration-500 ease-[var(--ease-out)] sm:px-5"
 			class:glass={scrolled}
-			class:shadow-lg={scrolled}
+			style={scrolled ? 'box-shadow:var(--shadow-float)' : ''}
 		>
 			<Logo />
 
-			<ul class="hidden items-center gap-1 md:flex">
+			<ul class="hidden items-center gap-0.5 md:flex">
 				{#each links as link (link.href)}
 					<li>
 						<a
 							href={link.href}
-							class="text-fg-muted hover:text-fg rounded-lg px-2.5 py-2 text-sm whitespace-nowrap transition-colors duration-200 lg:px-3"
+							class="text-fg-muted hover:text-fg group relative rounded-lg px-2.5 py-2 text-sm whitespace-nowrap transition-colors duration-200 lg:px-3"
 						>
 							{link.label}
+							<!-- Subrayado que crece desde el centro: un detalle que se nota en
+							     el agregado, no de uno en uno. -->
+							<span
+								class="absolute inset-x-2.5 bottom-1 h-px origin-center scale-x-0 bg-gradient-to-r from-transparent via-[var(--color-brand)] to-transparent transition-transform duration-300 ease-[var(--ease-out)] group-hover:scale-x-100 lg:inset-x-3"
+							></span>
 						</a>
 					</li>
 				{/each}
@@ -74,20 +82,21 @@
 				</a>
 				<a
 					href="#cta"
-					class="group bg-fg text-ink relative inline-flex items-center gap-1.5 overflow-hidden rounded-lg px-4 py-2 text-sm font-semibold transition-transform duration-200 active:scale-[0.97]"
+					use:magnetic={{ strength: 0.3 }}
+					class="group bg-fg text-ink sheen relative inline-flex items-center gap-1.5 overflow-hidden rounded-lg px-4 py-2 text-sm font-semibold active:scale-[0.97]"
 				>
 					Comienza YA!
 					<Icon
 						name="arrow"
 						size={15}
-						class="transition-transform duration-200 group-hover:translate-x-0.5"
+						class="transition-transform duration-200 ease-[var(--ease-out)] group-hover:translate-x-0.5"
 					/>
 				</a>
 			</div>
 
 			<!-- Mobile toggle -->
 			<button
-				class="text-fg inline-flex h-10 w-10 items-center justify-center rounded-lg md:hidden"
+				class="text-fg inline-flex h-10 w-10 items-center justify-center rounded-lg transition-transform duration-150 active:scale-90 md:hidden"
 				onclick={() => (open = !open)}
 				aria-label="Menú"
 				aria-expanded={open}
@@ -98,7 +107,11 @@
 
 		<!-- Mobile menu -->
 		{#if open}
-			<div class="glass mt-2 overflow-hidden rounded-2xl p-3 md:hidden">
+			<div
+				class="glass mt-2 overflow-hidden rounded-2xl p-3 md:hidden"
+				style="box-shadow:var(--shadow-float)"
+				transition:slide={{ duration: 260, easing: cubicOut }}
+			>
 				<ul class="flex flex-col">
 					{#each links as link (link.href)}
 						<li>
@@ -122,7 +135,7 @@
 				<a
 					href="#cta"
 					onclick={() => (open = false)}
-					class="bg-fg text-ink mt-2 flex items-center justify-center gap-1.5 rounded-lg px-4 py-3 text-sm font-semibold"
+					class="bg-fg text-ink mt-2 flex items-center justify-center gap-1.5 rounded-lg px-4 py-3 text-sm font-semibold transition-transform duration-150 active:scale-[0.97]"
 				>
 					Comienza YA!
 					<Icon name="arrow" size={15} />

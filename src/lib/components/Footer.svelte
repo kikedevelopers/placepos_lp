@@ -54,7 +54,7 @@
 							<li>
 								<a
 									href={link.href}
-									class="text-sm text-fg-muted transition-colors hover:text-fg"
+									class="text-fg-muted hover:text-fg inline-block text-sm transition-[color,transform] duration-200 ease-[var(--ease-out)] hover:translate-x-0.5"
 								>
 									{link.label}
 								</a>
