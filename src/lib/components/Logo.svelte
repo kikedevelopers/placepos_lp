@@ -14,7 +14,7 @@
 		style="width:{size}px;height:{size}px"
 	>
 		<img
-			src="{base}/logo.png"
+			src="{base}/logo-mark.png"
 			alt="PlacePos"
 			width={size}
 			height={size}

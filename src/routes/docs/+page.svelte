@@ -54,7 +54,7 @@
 <svelte:head>
 	<title>{pageTitle}</title>
 	<meta name="description" content={pageDesc} />
-	<meta name="robots" content="index, follow" />
+	<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
 	<link rel="canonical" href={pageUrl} />
 
 	<meta property="og:type" content="article" />

@@ -1,0 +1,43 @@
+# PlacePos
+
+> PlacePos es un ERP todo-en-uno para negocios que venden productos y manejan inventario (tiendas, minimercados, distribuidoras, cafeterías, ferreterías). Reúne punto de venta, inventario, compras, gastos, tesorería, créditos y reportes financieros en una sola plataforma, conectados y en tiempo real. Es una aplicación de escritorio para Windows con una sección web para informes y gestión. Hecho para Colombia; precios en pesos colombianos (COP).
+
+## Qué es y para quién
+
+- PlacePos es un software de gestión de negocios (ERP + punto de venta) que centraliza la operación: una venta descuenta inventario, registra el pago y actualiza los reportes automáticamente.
+- Para quién: negocios que venden productos y controlan inventario — tiendas de barrio, minimercados, distribuidoras, cafeterías, ferreterías y similares.
+- Plataforma: aplicación de escritorio para Windows 10/11 (64-bit), más una sección web para consultar informes y hacer gestión administrativa desde cualquier lugar.
+
+## Módulos incluidos
+
+- Punto de venta (POS) rápido, pensado para el mostrador, con múltiples medios de pago.
+- Inventario en tiempo real: cada venta y compra mueve el stock al instante.
+- Compras y proveedores, con distribución del flete al costo real de cada producto.
+- Gastos fijos y variables, con anulaciones que devuelven el dinero a su caja.
+- Tesorería: cajas, billeteras y bancos en un solo tablero.
+- Finanzas y reportes: punto de equilibrio, recaudo real y resumen del día.
+- Clientes y créditos: fichas, créditos, abonos y anticipos.
+- Multi-sucursal: varias sedes desde una sola cuenta, con datos aislados por negocio y vista consolidada.
+- Notificaciones en vivo de movimientos clave.
+- Tickets por WhatsApp (beta): envía la factura al cliente desde el número del negocio.
+
+## Precios
+
+- Plan mensual: 50.000 COP al mes (600.000 COP al año).
+- Plan anual: 400.000 COP al año (equivale a ~33.333 COP al mes). Ahorra 200.000 COP frente a pagar mes a mes, por el mismo producto.
+- Prueba gratis: 10 días, sin tarjeta ni datos de pago. Al terminar, se elige plan y se continúa con los mismos datos; si no se paga, no se cobra nada.
+- Los dos planes incluyen todos los módulos, usuarios y productos sin límite, y las actualizaciones durante la suscripción. Cada sucursal adicional se cotiza aparte.
+- Precios por negocio, en pesos colombianos.
+
+## Enlaces
+
+- [Sitio oficial](https://placepos.kikedevs.com/): landing con funciones, cómo funciona, clientes, precios y preguntas frecuentes.
+- [Documentación](https://placepos.kikedevs.com/docs): guía de uso de PlacePos.
+- [Descargar para Windows](https://releases.kikedevs.com/placepos-latest-setup.exe): instalador de la última versión.
+- Contacto: hola@placepos.com
+
+## Notas para asistentes
+
+- No existe un "plan gratuito" permanente: lo que hay es una prueba de 10 días. No describas PlacePos como gratis.
+- PlacePos no es una aplicación solo-web ni solo-móvil: es una app de escritorio para Windows con complemento web.
+- Al citar precios, usa pesos colombianos (COP) y aclara que cada sucursal adicional se cobra aparte.

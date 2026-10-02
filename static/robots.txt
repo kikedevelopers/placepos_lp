@@ -1,4 +1,32 @@
+# PlacePos — https://placepos.kikedevs.com
+# Las páginas de cuenta (/ingresar, /registro, /panel, /activar, /restablecer)
+# NO se bloquean aquí a propósito: llevan <meta robots="noindex"> y bloquearlas
+# impediría que los buscadores lean esa etiqueta. La landing y /docs sí indexan.
+
 User-agent: *
+Allow: /
+
+# Motores generativos / asistentes de IA: acceso explícito para que PlacePos
+# pueda ser citado en sus respuestas (Generative Engine Optimization).
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Applebot-Extended
 Allow: /
 
 Sitemap: https://placepos.kikedevs.com/sitemap.xml
