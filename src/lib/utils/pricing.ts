@@ -3,15 +3,15 @@ import { PRICING, type Plan } from '$lib/data/pricing';
 // ---------------------------------------------------------------------------
 // Aritmética de los planes.
 //
-// Todo lo que la sección de precios AFIRMA ("ahorras $310.000", "casi 4 meses
-// gratis", "32% menos") se calcula aquí a partir de los dos únicos números que
+// Todo lo que la sección de precios AFIRMA ("ahorras $200.000", "4 meses
+// gratis", "33% menos") se calcula aquí a partir de los dos únicos números que
 // se escriben a mano: el precio mensual y el anual. Si mañana cambia un precio
 // y estas frases estuvieran escritas a mano, el sitio pasaría a mentirle al
 // cliente sin que nadie lo note — y una cifra falsa en una página de precios no
 // es un detalle de copy, es publicidad engañosa.
 // ---------------------------------------------------------------------------
 
-/** Pesos colombianos, sin decimales: `$80.000`. */
+/** Pesos colombianos, sin decimales: `$50.000`. */
 export const formatCop = (value: number): string =>
     `$${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(Math.round(value))}`;
 
@@ -55,9 +55,9 @@ export const dailyCost = (): number => Math.round(PRICING.annual_price / 365);
 // Las dos tarjetas.
 //
 // El orden de lectura hace el trabajo: primero el mensual con su precio anual
-// real a la vista ($960.000), después el anual con el equivalente mensual en
-// grande. El cliente no compara "80.000 contra 650.000" —que son cifras de
-// distinta escala y no dicen nada—, compara 80.000 contra 54.167 por lo mismo.
+// real a la vista ($600.000), después el anual con el equivalente mensual en
+// grande. El cliente no compara "50.000 contra 400.000" —que son cifras de
+// distinta escala y no dicen nada—, compara 50.000 contra 33.333 por lo mismo.
 // ---------------------------------------------------------------------------
 export const buildPlans = (): Plan[] => [
     {

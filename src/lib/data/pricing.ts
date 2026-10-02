@@ -15,8 +15,8 @@ export const PRICING = {
     currency: 'COP',
     /** Días de prueba al registrarse. Espejo de `SUBSCRIPTION_TRIAL_DAYS` en pos_api. */
     trial_days: 10,
-    monthly_price: 80_000,
-    annual_price: 650_000
+    monthly_price: 50_000,
+    annual_price: 400_000
 };
 
 export type PlanId = 'monthly' | 'annual';

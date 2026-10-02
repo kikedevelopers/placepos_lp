@@ -16,7 +16,7 @@ import {
 // La sección de precios.
 //
 // Aquí no se prueba que "se vea bien": se prueba que lo que la página AFIRMA sea
-// verdad. Un cliente que multiplica $80.000 × 12 y no le da lo que dice la
+// verdad. Un cliente que multiplica $50.000 × 12 y no le da lo que dice la
 // tarjeta no piensa "qué error de copy", piensa que le están viendo la cara — y
 // eso pasa en la única pantalla donde ya estaba decidido a pagar.
 // ---------------------------------------------------------------------------
@@ -27,14 +27,14 @@ const annual = plans.find((p) => p.id === 'annual')!;
 
 describe('formato de moneda', () => {
     it('escribe pesos colombianos, sin decimales', () => {
-        expect(formatCop(80_000)).toBe('$80.000');
-        expect(formatCop(650_000)).toBe('$650.000');
-        expect(formatCop(1_781)).toBe('$1.781');
+        expect(formatCop(50_000)).toBe('$50.000');
+        expect(formatCop(400_000)).toBe('$400.000');
+        expect(formatCop(1_096)).toBe('$1.096');
     });
 
     it('redondea en vez de arrastrar decimales', () => {
-        // 650.000 / 12 = 54.166,66… No hay forma de cobrar centavos de peso.
-        expect(formatCop(54_166.67)).toBe('$54.167');
+        // 400.000 / 12 = 33.333,33… No hay forma de cobrar centavos de peso.
+        expect(formatCop(33_333.33)).toBe('$33.333');
     });
 
     it('sostiene un precio de siete cifras', () => {
@@ -49,35 +49,35 @@ describe('aritmética de los planes', () => {
 
     it('el ahorro es la diferencia real entre los dos caminos', () => {
         expect(annualSavings()).toBe(annualCostOfMonthly() - PRICING.annual_price);
-        expect(annualSavings()).toBe(310_000);
+        expect(annualSavings()).toBe(200_000);
     });
 
     it('el equivalente mensual del anual es más barato que el mensual', () => {
         // Si esto dejara de cumplirse, la tarjeta destacada estaría empujando al
         // cliente al plan MÁS caro con un cartel de ahorro encima.
         expect(monthlyEquivalent()).toBeLessThan(PRICING.monthly_price);
-        expect(monthlyEquivalent()).toBe(54_167);
+        expect(monthlyEquivalent()).toBe(33_333);
     });
 
     it('el porcentaje es el ahorro sobre lo que se pagaría mes a mes', () => {
-        expect(savingsPercent()).toBe(32);
+        expect(savingsPercent()).toBe(33);
         expect(savingsPercent()).toBeGreaterThan(0);
         expect(savingsPercent()).toBeLessThan(100);
     });
 
     it('el costo diario sale del plan anual, no del mensual', () => {
         expect(dailyCost()).toBe(Math.round(PRICING.annual_price / 365));
-        expect(dailyCost()).toBe(1_781);
+        expect(dailyCost()).toBe(1_096);
     });
 
-    it('el ahorro equivale a casi cuatro mensualidades', () => {
-        expect(freeMonths()).toBeCloseTo(3.875, 3);
+    it('el ahorro equivale a cuatro mensualidades', () => {
+        expect(freeMonths()).toBe(4);
     });
 });
 
 describe('el ahorro dicho en meses nunca promete de más', () => {
-    it('con 3,875 meses dice "casi 4", no "4"', () => {
-        expect(freeMonthsLabel()).toBe('casi 4 meses');
+    it('con 4 meses exactos dice "4 meses", sin "casi" ni "más de"', () => {
+        expect(freeMonthsLabel()).toBe('4 meses');
     });
 
     it('redondea hacia abajo cuando la fracción es intermedia', () => {
@@ -112,9 +112,9 @@ describe('las dos tarjetas', () => {
     });
 
     it('las dos cifras grandes están en la misma unidad', () => {
-        // Comparar "$80.000 al mes" contra "$650.000 al año" no le dice nada a
+        // Comparar "$50.000 al mes" contra "$400.000 al año" no le dice nada a
         // nadie. Las dos tarjetas dicen "al mes" para que la comparación sea
-        // inmediata: 80.000 contra 54.167.
+        // inmediata: 50.000 contra 33.333.
         expect(monthly.period).toBe('al mes');
         expect(annual.period).toBe('al mes');
         expect(monthly.price).toBe(formatCop(PRICING.monthly_price));
