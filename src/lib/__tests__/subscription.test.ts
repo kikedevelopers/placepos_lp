@@ -5,6 +5,7 @@ import {
 	describeSubscription,
 	effectiveStatus,
 	formatDate,
+	periodSummary,
 	planLabel
 } from '$lib/utils/subscription';
 
@@ -173,6 +174,37 @@ describe('cancelada', () => {
 		);
 		expect(view.tone).toBe('bad');
 		expect(view.detail).not.toMatch(/puedes seguir usando/i);
+	});
+});
+
+describe('resumen de período (sin lenguaje de prueba)', () => {
+	it('dice cuánto lleva y cuánto queda, nunca "prueba"', () => {
+		const p = periodSummary(build({ days_used: 183, days_remaining: 91, days_total: 274, progress: 0.668 }));
+		expect(p.elapsedLabel).toBe('Llevas 183 días');
+		expect(p.remainingLabel).toBe('Te quedan 91 días');
+		expect(p.percent).toBe(67);
+		// La promesa central del rediseño: el período no se llama prueba.
+		expect(`${p.elapsedLabel} ${p.remainingLabel}`.toLowerCase()).not.toContain('prueba');
+	});
+
+	it('usa singular con un solo día restante', () => {
+		const p = periodSummary(build({ days_remaining: 1 }));
+		expect(p.remainingLabel).toBe('Te queda 1 día');
+	});
+
+	it('en el corte no dice "te quedan 0 días"', () => {
+		const p = periodSummary(build({ days_remaining: 0 }));
+		expect(p.remainingLabel).toBe('Llegó al corte hoy');
+	});
+
+	it('deriva el porcentaje de los días si no llega `progress`', () => {
+		const p = periodSummary(build({ days_used: 5, days_remaining: 5, days_total: 10, progress: undefined as unknown as number }));
+		expect(p.percent).toBe(50);
+	});
+
+	it('acota el avance entre 0 y 100 aunque el backend mande basura', () => {
+		expect(periodSummary(build({ progress: 1.8 })).percent).toBe(100);
+		expect(periodSummary(build({ progress: -0.5 })).percent).toBe(0);
 	});
 });
 

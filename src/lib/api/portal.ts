@@ -115,6 +115,25 @@ export interface PortalAccount {
 export const getAccount = (token: string): Promise<PortalAccount> =>
 	apiRequest<PortalAccount>('/portal/account', { token });
 
+/** Una sede del negocio: su nombre y desde cuándo existe. */
+export interface Branch {
+	id: number;
+	name: string;
+	created_at: string;
+	/** Marca la sede principal si el backend la distingue. */
+	is_main?: boolean;
+}
+
+/**
+ * Lista las sucursales del negocio. El panel solo conoce `branches_count`; para
+ * decir CUÁLES son y desde cuándo existen hace falta esta llamada aparte, que se
+ * dispara únicamente cuando el dueño abre el detalle (no en cada carga).
+ *
+ * Contrato esperado de pos_api: `GET /portal/account/branches` → `Branch[]`.
+ */
+export const getBranches = (token: string): Promise<Branch[]> =>
+	apiRequest<Branch[]>('/portal/account/branches', { token });
+
 /**
  * Pide un plan. Un plan de pago queda PENDIENTE DE PAGO —el backend no asciende
  * nada por pedirlo—; `free` retira la solicitud o cancela la renovación.

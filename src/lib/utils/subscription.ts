@@ -53,6 +53,51 @@ export const formatDate = (iso: string): string => {
 /** "1 día" / "7 días". Evita el "1 días" que delata a un sistema descuidado. */
 export const dayCount = (days: number): string => `${days} ${days === 1 ? 'día' : 'días'}`;
 
+export interface PeriodSummary {
+	/** Días corridos desde que arrancó el período. */
+	elapsed: number;
+	/** Días que faltan para el corte. */
+	remaining: number;
+	/** Duración total del período. */
+	total: number;
+	/** Avance 0..100 para la barra. */
+	percent: number;
+	/** "Llevas 183 días" — lo que ya corrió. */
+	elapsedLabel: string;
+	/** "Te queda 1 día" / "Te quedan 91 días" — lo que falta. */
+	remainingLabel: string;
+}
+
+/**
+ * Resumen NEUTRO del período de la cuenta: cuántos días corridos lleva y
+ * cuántos le quedan. A propósito no dice "prueba": el dueño no quiere que se le
+ * llame prueba a su período vigente, solo saber en qué punto del plan va. Los
+ * números crudos vienen del backend; aquí solo se les da forma y plural.
+ */
+export function periodSummary(subscription: Subscription): PeriodSummary {
+	const elapsed = Math.max(0, Math.round(subscription.days_used ?? 0));
+	const remaining = Math.max(0, Math.round(subscription.days_remaining ?? 0));
+	const total = Math.max(0, Math.round(subscription.days_total ?? elapsed + remaining));
+	// Preferimos `progress` (lo calcula el backend con las fechas reales); si no
+	// llega, lo derivamos de los días para no dejar la barra en cero.
+	const raw =
+		typeof subscription.progress === 'number'
+			? subscription.progress
+			: total > 0
+				? elapsed / total
+				: 0;
+	const percent = Math.round(Math.min(1, Math.max(0, raw)) * 100);
+
+	return {
+		elapsed,
+		remaining,
+		total,
+		percent,
+		elapsedLabel: `Llevas ${dayCount(elapsed)}`,
+		remainingLabel: remaining > 0 ? `Te ${remaining === 1 ? 'queda' : 'quedan'} ${dayCount(remaining)}` : 'Llegó al corte hoy'
+	};
+}
+
 /**
  * Estado efectivo, tolerante a un pos_api de la versión anterior.
  *
