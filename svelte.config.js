@@ -6,7 +6,12 @@ const config = {
 		adapter: adapter({
 			pages: 'build',
 			assets: 'build',
-			fallback: null,
+			// SPA fallback para las rutas DINÁMICAS que no se pueden prerenderizar
+			// (el catálogo público `/catalog/[slug]`: los slugs no se conocen en
+			// build). El resto del sitio se sigue prerenderizando; GitHub Pages
+			// sirve `404.html` para cualquier ruta sin archivo y la app hidrata y
+			// enruta en el cliente. Las páginas estáticas no se ven afectadas.
+			fallback: '404.html',
 			precompress: false,
 			strict: true
 		}),
