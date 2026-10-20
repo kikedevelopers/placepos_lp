@@ -21,3 +21,6 @@ node_modules
 
 # Logs
 *.log
+
+# Binarios compilados de la skill impeccable (no se versionan)
+**/skills/impeccable/scripts/bin/
