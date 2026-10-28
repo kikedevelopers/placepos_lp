@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browserStorage, rememberIntendedPlan } from '$lib/utils/payment';
 	import { base } from '$app/paths';
 	import AuthShell from '$lib/components/auth/AuthShell.svelte';
 	import Field from '$lib/components/auth/Field.svelte';
@@ -44,6 +45,9 @@
 
 	$effect(() => {
 		plan = new URLSearchParams(window.location.search).get('plan') ?? '';
+		// Se recuerda en el navegador: el registro pasa por el correo de
+		// activación, y ese enlace no trae el plan de vuelta.
+		rememberIntendedPlan(browserStorage(), plan);
 	});
 
 	// La lista de requisitos se pinta en vivo: el usuario ve cuál le falta

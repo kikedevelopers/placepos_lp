@@ -91,6 +91,24 @@ export interface Subscription {
 	status?: SubscriptionStatus;
 	requested_plan?: SubscriptionPlan | null;
 	plan_requested_at?: string | null;
+	/**
+	 * Control de plan. Con un plan de pago vigente no se compra otro encima:
+	 * otro plan queda PROGRAMADO para el corte, y solo en el último mes se paga
+	 * el siguiente período. Opcionales por la misma razón que los de arriba.
+	 */
+	scheduled_plan?: PlanId | null;
+	plan_scheduled_at?: string | null;
+	/** Desde cuándo se puede pagar el siguiente período (`null` = ya). */
+	renewal_opens_at?: string | null;
+	/** Se puede abrir un pago ahora mismo. */
+	can_pay_now?: boolean;
+}
+
+/** Período YA PAGADO que todavía no empieza (renovación anticipada). */
+export interface UpcomingPeriod {
+	plan: PlanId;
+	starts_at: string;
+	ends_at: string;
 }
 
 export interface PortalAccount {
@@ -110,6 +128,7 @@ export interface PortalAccount {
 		branches_count: number;
 	};
 	subscription: Subscription | null;
+	upcoming_period?: UpcomingPeriod | null;
 }
 
 export const getAccount = (token: string): Promise<PortalAccount> =>
@@ -135,8 +154,9 @@ export const getBranches = (token: string): Promise<Branch[]> =>
 	apiRequest<Branch[]>('/portal/account/branches', { token });
 
 /**
- * Pide un plan. Un plan de pago queda PENDIENTE DE PAGO —el backend no asciende
- * nada por pedirlo—; `free` retira la solicitud o cancela la renovación.
+ * Pide un plan. Sin plan de pago vigente queda PENDIENTE DE PAGO —el backend no
+ * asciende nada por pedirlo—; con plan de pago vigente queda PROGRAMADO para el
+ * corte. `free` retira la solicitud o cancela la renovación.
  */
 export const changePlan = (token: string, plan: SubscriptionPlan): Promise<Subscription> =>
 	apiRequest<Subscription>('/portal/subscription/plan', {
@@ -144,3 +164,60 @@ export const changePlan = (token: string, plan: SubscriptionPlan): Promise<Subsc
 		token,
 		body: { plan }
 	});
+
+// ---------------------------------------------------------------------------
+// Pagos en línea (Wompi).
+//
+// La landing NUNCA decide el monto ni si un pago quedó aprobado: pide el link
+// de pago a pos_api (que fija el precio) y, al volver del checkout, le pregunta
+// a pos_api cómo quedó (pos_api a su vez lo verifica contra Wompi).
+// ---------------------------------------------------------------------------
+
+export type PaymentStatus =
+	| 'pending'
+	| 'approved'
+	| 'declined'
+	| 'voided'
+	| 'error'
+	| 'expired'
+	| 'needs_review';
+
+export interface Payment {
+	reference: string;
+	plan: PlanId;
+	amount_in_cents: number;
+	currency: string;
+	days_granted: number;
+	status: PaymentStatus;
+	checkout_url: string;
+	link_expires_at: string;
+	transaction_id: string | null;
+	payment_method_type: string | null;
+	failure_reason: string | null;
+	applied_at: string | null;
+	period_starts_at?: string | null;
+	period_ends_at: string | null;
+	created_at: string;
+}
+
+/** Abre (o reutiliza) el link de pago del plan. */
+export const createCheckout = (token: string, plan: PlanId): Promise<Payment> =>
+	apiRequest<Payment>('/portal/payments/checkout', { method: 'POST', token, body: { plan } });
+
+/**
+ * Estado de un pago. Con `transaction_id` (el `?id=` que añade Wompi al volver)
+ * pos_api lo verifica en el acto.
+ */
+export const confirmPayment = (
+	token: string,
+	reference: string,
+	transaction_id?: string | null
+): Promise<Payment> =>
+	apiRequest<Payment>(`/portal/payments/${encodeURIComponent(reference)}/confirm`, {
+		method: 'POST',
+		token,
+		body: transaction_id ? { transaction_id } : {}
+	});
+
+export const listPayments = (token: string): Promise<Payment[]> =>
+	apiRequest<Payment[]>('/portal/payments', { token });

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browserStorage, rememberIntendedPlan } from '$lib/utils/payment';
 	import { base } from '$app/paths';
 	import { goto } from '$app/navigation';
 	import AuthShell from '$lib/components/auth/AuthShell.svelte';
@@ -43,6 +44,9 @@
 	// que él mismo acaba de escribir.
 	$effect(() => {
 		plan = new URLSearchParams(window.location.search).get('plan') ?? '';
+		// Se recuerda en el navegador: el registro pasa por el correo de
+		// activación, y ese enlace no trae el plan de vuelta.
+		rememberIntendedPlan(browserStorage(), plan);
 	});
 
 	$effect(() => {
@@ -76,9 +80,7 @@
 			// (cuenta sin activar, no eres el dueño): se muestran tal cual en vez
 			// de traducirlos aquí y arriesgar dos textos distintos para lo mismo.
 			submitError =
-				error instanceof ApiError
-					? error.message
-					: 'No pudimos iniciar sesión. Intenta de nuevo.';
+				error instanceof ApiError ? error.message : 'No pudimos iniciar sesión. Intenta de nuevo.';
 		} finally {
 			submitting = false;
 		}
@@ -101,7 +103,9 @@
 			recoverySent = result.email || email;
 		} catch (error) {
 			recoveryError =
-				error instanceof ApiError ? error.message : 'No pudimos enviar el correo. Intenta de nuevo.';
+				error instanceof ApiError
+					? error.message
+					: 'No pudimos enviar el correo. Intenta de nuevo.';
 		} finally {
 			recoverySubmitting = false;
 		}
@@ -186,9 +190,7 @@
 			<h1 class="text-2xl font-extrabold tracking-tight sm:text-3xl">
 				<span class="text-gradient-soft">Entra a tu cuenta</span>
 			</h1>
-			<p class="text-fg-muted mt-2 text-sm">
-				Gestiona tu plan y los datos de tu negocio.
-			</p>
+			<p class="text-fg-muted mt-2 text-sm">Gestiona tu plan y los datos de tu negocio.</p>
 		</header>
 
 		<form class="mt-8 space-y-5" onsubmit={onSubmit} novalidate>
