@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import Logo from './Logo.svelte';
 	import { SITE } from '$lib/data/site';
 
@@ -41,14 +42,14 @@
 		<div class="grid grid-cols-2 gap-10 md:grid-cols-4">
 			<div class="col-span-2 md:col-span-1">
 				<Logo />
-				<p class="mt-4 max-w-xs text-sm text-fg-muted">
+				<p class="text-fg-muted mt-4 max-w-xs text-sm">
 					El ERP todo-en-uno para hacer crecer tu negocio: vende, controla y decide con datos en
 					tiempo real.
 				</p>
 			</div>
 			{#each groups as group (group.title)}
 				<div>
-					<h3 class="font-display text-sm font-semibold text-fg">{group.title}</h3>
+					<h3 class="font-display text-fg text-sm font-semibold">{group.title}</h3>
 					<ul class="mt-4 flex flex-col gap-2.5">
 						{#each group.links as link (link.label)}
 							<li>
@@ -68,11 +69,14 @@
 		<div
 			class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/[0.06] pt-6 sm:flex-row"
 		>
-			<p class="text-xs text-fg-faint">© {year} {SITE.name}. Todos los derechos reservados.</p>
-			<div class="flex items-center gap-5 text-xs text-fg-faint">
-				<a href="#top" class="transition-colors hover:text-fg">Privacidad</a>
-				<a href="#top" class="transition-colors hover:text-fg">Términos</a>
-				<a href="#top" class="transition-colors hover:text-fg">Volver arriba ↑</a>
+			<p class="text-fg-faint text-xs">© {year} {SITE.name}. Todos los derechos reservados.</p>
+			<div class="text-fg-faint flex items-center gap-5 text-xs">
+				<a href="{base}/privacidad" class="hover:text-fg transition-colors">Privacidad</a>
+				<a href="{base}/terminos" class="hover:text-fg transition-colors">Términos</a>
+				<a href="{base}/eliminacion-datos" class="hover:text-fg transition-colors">
+					Eliminación de datos
+				</a>
+				<a href="#top" class="hover:text-fg transition-colors">Volver arriba ↑</a>
 			</div>
 		</div>
 	</div>
